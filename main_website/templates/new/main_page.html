@@ -1,0 +1,172 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <link href="{% static 'new/page1/style.css' %}" rel="stylesheet">
+    <script crossorigin="anonymous" src="https://kit.fontawesome.com/73b6dfc8d5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reconnecting-websocket/1.0.0/reconnecting-websocket.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css" rel="stylesheet"/>
+    <link href="{% static 'new/page1/navbar.css' %}" rel="stylesheet">
+    <script src="{% static 'main_website/dataanalytics_websocket.js' %}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <script src="https://code.jquery.com/jquery-migrate-3.0.0.min.js"></script>      
+    <title>{{ company_name }}</title>
+    <audio id="myAudio">
+      <source src="https://webinarzappastatic.s3.ap-south-1.amazonaws.com/media/WhatsApp+Audio+2020-09-06+at+3.02.16+PM.mpeg" type="audio/mpeg">
+      Your browser does not support the audio element.
+    </audio>    
+    <style>
+      .btn1{
+        top: 45%;
+        left: 23%;
+      }
+      .btn2{
+        top: 50%;
+        left: 23%;
+      }
+      .btn3{
+        top: 55%;
+        left: 23%;
+      }    
+      .btn4{
+        top: 60%;
+        left: 23%;
+      }        
+
+       @media (orientation:portrait){
+	        #wrapper { display:none; }
+	        #warning-message { display:block; }
+	    }
+	    @media (orientation: landscape) {
+	        #warning-message { display:none; }
+	    }
+
+    </style>
+    <link rel="stylesheet" href="{% static 'main_website/chat_box.css' %}" />
+</head>
+<body>
+
+<div id='wrapper'>
+    <div class="page">
+        {% if background_type == 'video' %}
+        <video autoplay="" class="bg" data-setup="{}" height="100%" loop="" muted="" preload="auto"
+               src="{{ background_url.url }}" style="z-index: 0; position: absolute;" width="100%"></video>
+        {% else %}
+        <img alt="" class="bg" src="{{ background_url.url }}">
+        {% endif %}
+
+        {% for link in banner_links %}
+        <a href="{{ link.1 }}" >
+            <button class=" gbtn btn{{ forloop.counter }} animate__animated animate__fadeIn" data-wow-duration="2s"><b>
+                {{ link.0 }} </b></button>
+        </a>
+        {% endfor %}
+    </div>
+    <div class="pic-wrapper " data-wow-duration="2s">
+        {% for image in slides %}
+        <figure class="pic-{{ forloop.counter }} pic" style="background: url({{ image.url }}) no-repeat center center; background-size: cover;
+}">
+        </figure>
+        {% endfor %}
+    </div>
+    <a class="text-info m-l-5 " href="{% url 'main_website:lobby' company_name=company_name stall_text=stall_text %}"
+       id='enter_lobby' style="text-decoration:none;">
+        <div class="event_btn animate__animated animate__backInLeft wow" data-wow-duration="2s">
+            <p style="color: black; font-size: 1.4vw;">Event Area</p>
+            <p>First Floor</p>
+        </div>
+    </a>
+
+
+    <!-- <div class="flip-card">
+        <div class="flip-card-inner">
+            <div class="flip-card-front">
+                <img alt="Banner" src="{{ main_page_front_banner_image.url }}">
+            </div>
+            <div class="flip-card-back">
+                <img alt="Banner" src="{{ main_page_back_banner_image.url }}">
+            </div>
+        </div>
+    </div>
+ -->
+
+    <div class="wrapper1" >
+            <div class="boxarea" style="margin-top: -27%;">
+                <div class="slide1 slide">
+                <img width="100px" height="300px" src="{{ main_page_back_banner_image1.url }}" alt="">
+                </div>
+                <div class="slide2 slide">
+                <img width="100px" height="300px" src="{{ main_page_back_banner_image2.url }}" alt="">
+                </div>
+                <div class="slide3 slide">
+                <img width="100px" height="300px" src="{{ main_page_back_banner_image3.url }}" alt="">
+                </div>
+                <div class="slide4 slide">
+                <img width="100px" height="300px" src="{{ main_page_back_banner_image4.url }}" alt="">
+                </div>
+
+            </div>
+
+      </div>
+
+    {% include 'new/everypage_chat.html' %}
+
+    {% include 'nav.html' %}
+
+</div>
+
+<script>
+    window.addEventListener('click', function(e){   
+      if (document.getElementById('chatbox').contains(e.target)){
+        // Clicked in box
+      }
+      else if(document.getElementById('attendee_popup').contains(e.target)){
+        document.getElementById('chatbox').style.display = "block";
+        document.getElementById('chatbox_main').style.display = "none";
+        $('#attendee_popup').css('color','black');
+      }
+      else{
+        document.getElementById('chatbox').style.display = "none";
+        document.getElementById('chatbox_main').style.display = "none";
+      }
+
+      if (document.getElementById('chatbox_main').contains(e.target)){
+        // Clicked in box
+      }
+      else if(document.getElementById('attendee_popup_main').contains(e.target)){
+        document.getElementById('chatbox_main').style.display = "block";
+        document.getElementById('chatbox').style.display = "none";
+      }
+      else{
+        document.getElementById('chatbox_main').style.display = "none";
+        document.getElementById('chatbox').style.display = "none";
+      }
+
+    });
+
+    $('#attendee_popup').click(function(){
+        document.getElementById('chatbox').style.display = "block";
+        $('#attendee_popup').css('color','black');
+    })
+    $('#attendee_popup_main').click(function(){
+        document.getElementById('chatbox_main').style.display = "block";
+    })    
+</script>
+
+
+<div id='warning-message' style='background-color: black;'>
+    <img src="https://www.robscanlon.com/pleaserotate/demo.gif" style='width:100%;height: 100%;'></img>
+    <h1 style="font-size: 40px; color:white; position: absolute; top:0%; text-align: center;">Please rotate Mobile </h1>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js"></script>
+<script>
+        new WOW().init();
+
+
+</script>
+
+</body>
+</html>

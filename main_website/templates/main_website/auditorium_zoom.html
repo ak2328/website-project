@@ -1,0 +1,224 @@
+{% load static %}
+<!DOCTYPE html>
+
+<head>
+    <meta charset="utf-8" />
+    <link type="text/css" rel="stylesheet" href="https://source.zoom.us/1.7.10/css/bootstrap.css" />
+    <link type="text/css" rel="stylesheet" href="https://source.zoom.us/1.7.10/css/react-select.css" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <script src="{% static 'main_website/dataanalytics_websocket.js' %}"></script>
+
+</head>
+
+<body>
+    <style>
+        .sdk-select {
+            height: 34px;
+            border-radius: 4px;
+        }
+
+        .websdktest button {
+            float: right;
+            margin-left: 5px;
+        }
+
+        #nav-tool {
+            margin-bottom: 0px;
+        }
+
+        #show-test-tool {
+            position: absolute;
+            top: 100px;
+            left: 0;
+            display: block;
+            z-index: 99999;
+        }
+
+        #display_name {
+            width: 250px;
+        }
+
+
+        #websdk-iframe {
+            width: 700px;
+            height: 500px;
+            border: 1px;
+            border-color: red;
+            border-style: dashed;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            left: 50%;
+            margin: 0;
+        }
+        .nvabar{
+            background-color: grey;
+            color: white;
+        }
+        .navbar2{
+            margin-top: 0px !important;
+        }
+        .navbar1{
+            margin-bottom: 0px;
+        }
+        label{
+            color: white;
+        }
+        #zmmtg-root{
+            background-color: none !important;
+            top:auto;
+        }
+    </style>
+
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark navigation_header" style="z-index:100; margin-bottom: 0px; font-size: 12px;">
+        <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href={{ back_button }}>Back</a>
+                </li>                   
+                <li class="nav-item ">
+                    <a class="nav-link" href="{% url 'main_website:exhibit_hall' company_name=company_name stall_text=stall_text %}">Exhibit Hall</a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="{% url 'main_website:lobby' company_name=company_name stall_text=stall_text %}">Lobby</a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="{% url 'main_website:social_lounge' company_name=company_name stall_text=stall_text %}">Social Lounge</a>
+                </li>                                               
+                <li class="nav-item ">
+                    <a class="nav-link" href="{% url 'main_website:info_desk' company_name=company_name stall_text=stall_text %}">Info Center</a>
+                </li>                                                                       
+            </ul>
+        </div>
+        <div class="mx-auto order-0 center_navigation_header" style='width: 100%; font-size: 15px; text-align: center;'>
+            {{ company_name }}
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".dual-collapse2">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+        <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
+            <ul class="navbar-nav ml-auto" style='float:right;'>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Registered Users- {{ registered_users }}  </a>                     
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'users:logout' company_name=company_name stall_text=stall_text %}">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    
+    <button type="submit" class="btn btn-primary" id="join_iframe"  style='width: 100%; z-index: 1000;'>Join</button>
+    <nav id="nav-tool" class="navbar navbar-inverse navbar-fixed-top navbar2" style="display:none; width: 0px; padding: 0px; height: 0px;">
+        <div class="container" style="justify-content: left;">
+            <div id="navbar" class="websdktest col-8">
+                <form class="navbar-form navbar-right" id="meeting_form" style="width: 40%;">
+                    <div class="form-group" style="display: none">
+                        <input type="text" name="display_name" id="display_name" value="1.7.10#CDN" maxLength="100"
+                            placeholder="Name" class="form-control" required>
+                    </div>
+                    <div class="form-group" style='display: none'>
+                        <label>Meeting Number</label>
+                        <input type="text" name="meeting_number" id="meeting_number" value="" maxLength="200"
+                            style="width:150px" class="form-control" required>
+                    </div>
+                    <div class="form-group" style='display: none'>
+                        <label>Password</label>
+                        <input type="text" name="meeting_pwd" id="meeting_pwd" value="" style="width:150px"
+                            maxLength="32" value="25" class="form-control" autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="meeting_email" id="meeting_email" value="" style="width:150px; display: none;"
+                            maxLength="32" placeholder="Email option" class="form-control">
+                    </div>
+
+                    <div class="form-group" style="display: none;">
+                        <select id="meeting_role" class="sdk-select">
+                            <option value=0>Attendee</option>
+                            <option value=1>Host</option>
+                            <option value=5>Assistant</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="display: none;">
+                        <select id="meeting_china" class="sdk-select">
+                            <option value=0>Global</option>
+                            <option value=1>China</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="display: none;">
+                        <select id="meeting_lang" class="sdk-select">
+                            <option value="en-US">English</option>
+                            <option value="de-DE">German Deutsch</option>
+                            <option value="es-ES">Spanish Español</option>
+                            <option value="fr-FR">French Français</option>
+                            <option value="jp-JP">Japanese 日本語</option>
+                            <option value="pt-PT">Portuguese Portuguese</option>
+                            <option value="ru-RU">Russian Русский</option>
+                            <option value="zh-CN">Chinese 简体中文</option>
+                            <option value="zh-TW">Chinese 繁体中文</option>
+                            <option value="ko-KO">Korean 한국어</option>
+                            <option value="vi-VN">Vietnamese Tiếng Việt</option>
+                            <option value="it-IT">Italian italiano</option>
+                        </select>
+                    </div>
+
+                    <input type="hidden" value="" id="copy_link_value" />
+                    <button type="submit" class="btn btn-primary" id="join_meeting" style='display: none; width: 100%;'>Join</button>
+                    
+                    <button type="submit" class="btn btn-primary" id="clear_all" style='display: none;'>Clear</button>
+                    <button type="button" link="" onclick="window.copyJoinLink('#copy_join_link')"
+                        class="btn btn-primary" id="copy_join_link" style='display: none;'>Copy Direct join link</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+
+    <script type="text/javascript">
+        window.onload = function() {
+                document.getElementById('meeting_number').value = "{{zoom_meeting_id}}";
+                document.getElementById('meeting_pwd').value = "{{zoom_meeting_password}}";
+                // debugger;
+        };
+    
+    </script>
+<!--     <div id="show-test-tool">
+        <button type="submit" class="btn btn-primary" id="show-test-tool-btn"
+            title="show or hide top test tool">Show</button>
+    </div> -->
+ <!--    <script>
+        document.getElementById('show-test-tool-btn').addEventListener("click", function (e) {
+            var textContent = e.target.textContent;
+            if (textContent === 'Show') {
+                document.getElementById('nav-tool').style.display = 'block';
+                document.getElementById('show-test-tool-btn').textContent = 'Hide';
+            } else {
+                document.getElementById('nav-tool').style.display = 'none';
+                document.getElementById('show-test-tool-btn').textContent = 'Show';
+            }
+        })
+    </script> -->
+
+    <script src="https://source.zoom.us/1.7.10/lib/vendor/react.min.js"></script>
+    <script src="https://source.zoom.us/1.7.10/lib/vendor/react-dom.min.js"></script>
+    <script src="https://source.zoom.us/1.7.10/lib/vendor/redux.min.js"></script>
+    <script src="https://source.zoom.us/1.7.10/lib/vendor/redux-thunk.min.js"></script>
+    <script src="https://source.zoom.us/1.7.10/lib/vendor/jquery.min.js"></script>
+    <script src="https://source.zoom.us/1.7.10/lib/vendor/lodash.min.js"></script>
+
+    <script src="https://source.zoom.us/zoom-meeting-1.7.10.min.js"></script>
+    <script src="{% static 'main_website/tool.js' %}"></script>
+    <script src="{% static 'main_website/vconsole.min.js' %}"></script>
+
+    <script src="{% static 'main_website/index.js' %}"></script>
+
+    <script>
+
+
+    </script>
+</body>
+
+</html>

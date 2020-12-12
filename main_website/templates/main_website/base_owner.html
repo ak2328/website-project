@@ -1,0 +1,65 @@
+{% load static %}
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<script src="{% static 'main_website/dataanalytics_websocket.js' %}"></script>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css"/>	
+		<link rel="stylesheet" href="{% static 'main_website/chat_box.css' %}" />	    
+		<audio id="myAudio">
+		  <source src="https://webinarzappastatic.s3.ap-south-1.amazonaws.com/media/WhatsApp+Audio+2020-09-06+at+3.02.16+PM.mpeg" type="audio/mpeg">
+		  Your browser does not support the audio element.
+		</audio>
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+		<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>		
+	</head>
+	<body>
+		<div id='wrapper'>
+			<nav class="navbar navbar-expand-md navbar-dark bg-dark navigation_header">
+			    <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
+			        <ul class="navbar-nav mr-auto">
+<!-- 			            <li class="nav-item ">
+			                <a class="nav-link" href="{% url 'main_website:auditorium' company_name=company_name stall_text=stall_text %}">Auditorium</a>
+			            </li> -->
+				            <li class="nav-item ">
+				                <a class="nav-link" href="{% url 'main_website:stall_portal' company_name=company_name stall_text=stall_text %}">Zoom</a>
+				            </li>
+				            <li class="nav-item ">
+				                <a class="nav-link" href="{% url 'main_website:stall_owner_chat' company_name=company_name stall_text=stall_text %}">Messaging</a>
+				            </li>				            				            
+			        </ul>
+			    </div>
+			    <div class="mx-auto order-0 center_navigation_header" style='width: 100%; font-size: 15px; text-align: center;'>
+			    	{{ company_name }}
+			        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".dual-collapse2">
+			            <span class="navbar-toggler-icon"></span>
+			        </button>
+			    </div>
+			    <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
+			        <ul class="navbar-nav ml-auto" style='float:right;'>
+			            <li class="nav-item">
+			            	<a class="nav-link" href="#">Registered Users- {{ registered_users }}  </a>		            	
+			            </li>
+			            <li class="nav-item">
+			            	<a class="nav-link" href="{% url 'main_website:stall_analytics' company_name=company_name stall_text=stall_text %}">Analytics  </a>		            	
+			            </li>
+			            <li class="nav-item">
+			                <a class="nav-link" href="{% url 'users:logout' company_name=company_name stall_text=stall_text %}">Logout</a>
+			            </li>
+			        </ul>
+			    </div>
+			</nav>
+			<div class='row' style='position: relative; height:100%;'>
+		        {% block content %}
+		        {% endblock %}
+			</div>		
+		</div>
+
+	</body>
+
+
+</html>

@@ -1,0 +1,137 @@
+body{
+  background-color: #FFFFFF;
+  background-repeat: no-repeat;
+  background-size: contain;
+  height: 100vh;
+  width: 100vw;
+  margin:0;
+}
+
+.maindiv{
+  
+}
+#capture{
+  position: relative;
+  height: 73vh;
+  top: 11vh;
+  width: 130vh;
+  display: flex;
+  justify-content: center;
+  margin: auto;
+}
+.one{
+ position: relative;
+    height: 100%;
+    width: auto;
+}
+
+video{
+      position: absolute;
+    z-index: -9;
+    object-fit: cover;
+    top: 5.6vh;
+    
+    left:30vh;
+  width: 92vh;
+  height: 50.2vh;
+}
+canvas{
+  position: absolute;
+    height: 100%;
+    width: 100%;
+    z-index: -9;
+    left: 30vh;
+    top: 5.22vh;
+    object-fit: fit;
+
+}
+.snap{
+  position:absolute;
+  top: 85%;
+  left: 49%;
+  width: 4%;
+  height: auto;
+}
+
+.home{
+  position:absolute;
+  top: 85%;
+  left: 90%;
+  width: 5%;
+  height: auto;
+}
+
+.download{
+  position:absolute;
+  top: 85%;
+  left: 44%;
+  width: 4%;
+  height: auto;
+}
+.reset{
+  position:absolute;
+  top: 85%;
+  left: 54%;
+  width: 4%;
+  height: auto;
+}
+
+.bg {
+  background-image: url("images/bg.jpg");
+  height: 100%;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+.caption {
+  font-family: 'Times New Roman';
+  text-transform: uppercase;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  color: #000;
+}
+.caption span.border {
+  background-color: #111;
+  color: #fff;
+  padding: 18px;
+  font-size: 25px;
+}
+
+#wrapper{
+  display:flex;
+  justify-content: center;
+  
+}
+
+#band{
+  position:absolute;
+  background-color:white;
+  height:16vh;
+  top:84vh;
+  padding:0;
+  margin:-10;
+  width:100vw;
+
+}
+
+
+#warning-message { display: none; }
+@media only screen and (orientation:portrait){
+    #wrapper { display:none; }
+    #warning-message { 
+      display:block;
+      position: relative;
+      height: 73vh;
+      top: 35vh;
+      width: 55vw;
+      display: block;
+      margin: auto;
+      font-weight: bold;
+      font-size: larger; }
+}
+@media only screen and (orientation:landscape){
+    #warning-message { display:none; }
+}

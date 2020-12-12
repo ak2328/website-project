@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+{% load static %}
+{% load widget_tweaks %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{% static 'dist/css/style.css' %}" rel="stylesheet">
+    <!-- <link rel="stylesheet" href="style.css"> -->
+    <title>Document</title>
+    <style>
+        input{
+            text-align: left; margin-left: 0px; font-size: 1em;
+        }
+        label{
+            display: flex;
+            padding-left: 30px;
+            margin-top: 10px;
+        }
+        .errorlist
+        {
+            color: red;
+        }      
+         form {
+          margin-left: 15%;
+        }
+
+        form input{
+          width: 85% !important;
+          /*margin-left: 5vw;*/
+          /*margin-right: 5vw;  */
+        } 
+    </style>
+</head>
+<body style='background-image: url(https://webinarzappastatic.s3.ap-south-1.amazonaws.com/media/reg+page+.jpg)'>
+    <div class="container">
+    <div id="mainDiv">
+        <div id="boxDiv">
+            <div id="front" style="background-image: url({{ rotating_image.url }}")></div>
+            <div id="back" style="background-image: url({{ rotating_image.url }}")></div>
+            <div id="left" style="background-image: url({{ rotating_image.url }}")></div>
+            <div id="right" style="background-image: url({{ rotating_image.url }}")></div>
+            <div id="top" style="background-image: url({{ rotating_image.url }}")></div>
+            <div id="bottom" style="background-image: url({{ rotating_image.url }})"></div>
+            <div class="shadow"></div>
+        </div>
+    </div>
+    <div class="login">
+        <div class="box">
+<!--           <h1 style="margin-top: 5vh; ">  {{ heading }}</h1>
+             <p> <h2> {{ subheading }} <br></h2> -->
+            </p>
+       <p style="font-size: 17.5px; margin-top: 2vh;">Register For This Event</p>
+    
+        <p style="font-size: 12.5px;">Fill the Details Below to Enter Virtual World</p>
+        <br>
+<!--         <p style="text-align: left; margin-left: 122px; font-size: 13px;">
+            Mobile:
+        </p> -->
+        <form action=""  method= 'post' id="loginform">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            {% for field in form.visible_fields %}
+                {{ field.label_tag }}
+                <div class="input-group mb-3">
+                    {% render_field field class="form-control form-control-lg" %}
+                </div>
+                {{ field.errors }}
+            {% endfor %}         
+<!--             <input type="" name="" id="" placeholder="+91" style="text-align: left; margin-left: 0px; font-size: 1em;"> -->
+
+            <br>
+            <button>Login</button><br>
+            <p style="font-size: 14px;">Create Account <a href="{% url 'users:register' company_name=company_name stall_text=stall_text %}">Sign Up</a></p>            
+        </form>
+
+       
+        </div>
+    </div>
+ </div>   
+     <script src="{% static 'assets/libs/jquery/dist/jquery.min.js' %}"></script>
+    <!-- Bootstrap tether Core JavaScript -->
+    <!-- <script src="{% static 'assets/libs/popper.js/dist/umd/popper.min.js' %}"></script> -->
+    <!-- <script src="{% static 'assets/libs/bootstrap/dist/js/bootstrap.min.js' %}"></script> -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+
+    $( document ).ready(function(){
+        // debugger;
+        $('label[for="id_password"]').hide ();
+        $('#id_password').css('display','none');            
+        $('#id_password').css('display','none');
+        $('label[for="id_mobile"]').hide ();
+        $('label[for="id_email"]').text('Email Address (Optional):')
+
+        // $('label:nth-child(4)').hide();
+        $('#id_mobile').css('display','none');            
+        document.getElementById('id_password').value = 123;        
+        document.getElementById('id_password').value = 123;                
+    })
+
+    $(".preloader").fadeOut();    
+</script> 
+</body>
+</html>

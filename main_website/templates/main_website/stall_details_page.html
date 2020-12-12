@@ -1,0 +1,14 @@
+{% extends 'main_website/base.html' %}
+{% load static %}
+{% block content %}
+
+
+	<img  src="{{ background.url }}" style="z-index: 0; width:100%; height:100%; " /> 
+	<div class="video-container stall_video_container" id="image_stall">
+		<iframe src="{{ stall_video_url }}" allowfullscreen autoplay picture-in-picture> </iframe>
+	</div>
+	<a href="{{ stall_doc_url.url }}" class = 'stall_text' style="z-index: 1; position: absolute; left: 76%;top: 40%; font-size:9px;" download="doc.pdf" onclick=stall_pdf()>Project</br> Details</a>
+	<a href="{% url 'main_website:stalls' company_name=company_name stall_text=stall_text  %}" class = 'stall_text' style="z-index: 1; position: absolute; left: 75.5%;top: 49.5%; font-size: 10px;">लाइव वीडियो </br> चैट</a>
+	<a href="{{ stall_web_link }}"  preload="auto" class = 'stall_text' style="z-index: 1; position: absolute; left: 76%;top: 59.8%; font-size:9px;" onclick=stall_website()>Website</a> 
+
+{% endblock %}

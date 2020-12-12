@@ -1,0 +1,291 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+	<link rel="stylesheet" href="{% static 'new/page3/style.css' %}">
+	<link rel="stylesheet" href="{% static 'new/page3/navbar.css' %}">
+	<script src="https://kit.fontawesome.com/73b6dfc8d5.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css"/>
+	  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+	  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="{% static 'main_website/dataanalytics_websocket.js' %}"></script>
+    <audio id="myAudio">
+      <source src="https://webinarzappastatic.s3.ap-south-1.amazonaws.com/media/WhatsApp+Audio+2020-09-06+at+3.02.16+PM.mpeg" type="audio/mpeg">
+      Your browser does not support the audio element.
+    </audio>
+    <script src="{% static 'main_website/dataanalytics_websocket.js' %}"></script>
+
+    <link rel="stylesheet" href="{% static 'main_website/chat_box.css' %}" />
+
+    <style>
+       @media (orientation:portrait){
+	        #wrapper { display:none; }
+	        #warning-message { display:block; }
+	    }
+	    @media (orientation: landscape) {
+	        #warning-message { display:none; }
+	    }
+	    .btn2{
+            top: 17.2%;
+            left: 26.5%;
+            width: 44%;
+            position: absolute;
+	    }
+	    button{
+	        background-color: blue;
+	    }
+	    p{
+            color: white;
+            font-weight: bold;
+            font-size: 20px;
+	    }
+    </style>
+
+</head>
+<body>
+
+
+    <div class="page_custom" style="background-image: url(https://webinarzappastatic.s3.ap-south-1.amazonaws.com/media/THEATER.jpg)">
+        <iframe allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen
+                class="vdo wow animate__fadeIn" data-wow-delay="1.5s"
+                frameborder="0" src="https://www.youtube.com/embed/MJHVmZGNl2Y"></iframe>
+
+        <button class="default-btn btn2" ><a onclick="myFunction()" href="https://agilent.webex.com/agilent/j.php?MTID=mb19117891e9ad9a160e6536023d015c7" style="text-decoration: none;"><p class="animate__slideInUp wow"data-wow-duration="2s">Click to Here to Join Meeting</p></a></button>
+
+        <!-- THis is polling modal -->
+        <div class="modal fade" id="pollingModal" role="dialog">
+            <div class="modal-dialog" style="display:table; max-width: 100%; width: 80%; max-height: 100%; height:80%;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <span>Polling Question</span>
+                        <button class="close" data-dismiss="modal" type="button">&times;</button>
+                    </div>
+                    <br>
+                    {% for poll in polls %}
+                    <form method="POST" action="{% url 'main_website:submit_polling_results' company_name=company_name stall_text=stall_text  %}">
+                    {% csrf_token %}
+
+                        <label style="margin-left: 15px" value={{poll.question_id}} name="question_id">{{poll.question}}</label><br><br>
+
+                        <input style="margin-left: 15px" type="radio" name="options" value="{{poll.option_one}}">&nbsp;{{poll.option_one}}
+                        <input style="margin-left: 15px" type="radio" name="options" value="{{poll.option_two}}">&nbsp;{{poll.option_two}}
+                        <input style="margin-left: 15px" type="radio" name="options" value="{{poll.option_three}}">&nbsp;{{poll.option_three}}
+                        <input style="margin-left: 15px" type="radio" name="options" value="{{poll.option_four}}">&nbsp;{{poll.option_four}}
+                        <input type="hidden" value="{{poll.question_id}}" name="question_id">
+                    <div class="modal-footer">
+                        <input type="submit" class="btn btn-default" type="button">
+                        <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
+                    </div>
+                    </form>
+                    {% endfor %}
+                </div>
+
+            </div>
+        </div>
+        <div class="modal fade" id="pollingResults">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                  <h4 class="modal-title">Pooling Results</h4>
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    {% for poll in polls %}
+                    <label style="margin-left: 15px" value={{poll.question_id}} name="question_id">{{poll.question}}</label><br><br>
+                    <div style="margin-left: 20px;">
+                    <ul>
+                        &nbsp;&nbsp;&nbsp;&nbsp;   <li>Votes for {{poll.option_one}}&nbsp;&nbsp;&nbsp;&nbsp;{{poll_result.0}}</li>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<li>Votes for {{poll.option_two}}&nbsp;&nbsp;&nbsp;&nbsp;{{poll_result.1}}</li>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<li>Votes for {{poll.option_three}}&nbsp;&nbsp;&nbsp;&nbsp;{{poll_result.2}}</li>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<li>Votes for {{poll.option_four}}&nbsp;&nbsp;&nbsp;&nbsp;{{poll_result.3}}</li>
+                    </ul>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+
+              </div>
+            </div>
+          </div>
+<div class="modal fade" id="myModal" role="dialog">
+            <div class="modal-dialog" style="display:table; max-width: 100%; width: 80%; max-height: 100%; height:80%;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button class="close" data-dismiss="modal" type="button">&times;</button>
+                    </div>
+                    <iframe allowfullscreen autoplay picture-in-picture src="{{ auditorium_keynote_track }}"
+                            style='width:100%; height:700px;'></iframe>
+                    <div class="modal-footer">
+                        <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="modal fade" id="chatModal2" role="dialog">
+            <div class="modal-dialog" style="display:table; max-width: 100%; width: 80%; max-height: 50%; height:50%;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        Ask a Question
+                        <button class="close" data-dismiss="modal" type="button">&times;</button>
+                    </div>
+
+                    <div class="modal-footer" id="sendmessage2">
+                        <input id="chat-message-input2" style='width:100%; height: 100%;' type="text"/>
+                        <button class="btn btn-default" id='send2' type="button">Send</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+  <div class="navbar_custom">
+    <ul><li><a href={{ back_button }}><i class="fas fa-arrow-left"></i></li><li>Back</a></li></ul>
+    <ul><li><a href="{% url 'main_website:first_floor' company_name=company_name stall_text=stall_text %}"><i class="far fa-building"></i></li><li>First Floor</a></li></ul>
+
+    <ul><li><a href="{% url 'main_website:lobby' company_name=company_name stall_text=stall_text %}"><i class="fas fa-home"></i></li><li>Lobby</a></li></ul>
+    {% if hall_array.0 %}
+        <ul><li><a href="{% url 'main_website:auditorium' company_name=company_name stall_text=stall_text %}"><i class="fa fa-building" aria-hidden="true"></i></li><li>{{ hall_array.0 }}</a></li></ul>
+    {% endif %}
+    {% if hall_array.1 %}
+        <ul><li><a href="{% url 'main_website:info_desk' company_name=company_name stall_text=stall_text %}"><i class="fas fa-info"></i></li><li>{{ hall_array.1 }}</a></li></ul>
+    {% endif %}
+    {% if hall_array.2 %}
+        <ul><li><a href="{% url 'main_website:exhibit_hall' company_name=company_name stall_text=stall_text %}"><i class="fa fa-university" aria-hidden="true"></i></li><li>{{ hall_array.2 }}</a></li></ul>
+    {% endif %}
+    {% if hall_array.3 %}
+        <ul><li><a href="{% url 'main_website:social_lounge' company_name=company_name stall_text=stall_text %}"><i class="fas fa-network-wired"></i></li><li>{{ hall_array.3 }}</a></li></ul>
+    {% endif %}
+
+    {% if hall_array.4 %}
+        <ul><li><a href="{% url 'main_website:partners_tab' company_name=company_name stall_text=stall_text %}"><i class="fas fa-network-wired"></i></li><li>{{ hall_array.4 }}</a></li></ul>
+    {% endif %}
+
+    <ul><div id = "attendee_popup"><li>{{ registered_users }}</li><li>Attendees</div></li></ul>
+
+    <ul><li><a href="{% url 'users:logout' company_name=company_name stall_text=stall_text %}"><i class="fas fa-sign-out-alt"></i></li><li>Log out</a></li></ul>
+ </div>
+
+
+
+ <div id='warning-message' style='background-color: black;'>
+    <img src="https://www.robscanlon.com/pleaserotate/demo.gif" style='width:100%;height: 100%;'></img>
+    <h1 style="font-size: 40px; color:white; position: absolute; top:0%; text-align: center;">Please rotate
+        Mobile </h1>
+</div>
+		<iframe class="vdo wow animate__fadeIn" data-wow-delay="1.5s" src="{{ auditorium_youtube_name }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js"></script>
+        <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+
+      <script>
+            new WOW().init();
+      </script>
+    <script>
+                // You can change the speed and amount of cards here
+var cardAmount = 4;
+var flipSpeed = 4500;
+
+// Preload all images to prevent blank cards
+// because they're switched with CSS classes
+(function preload(imageArray) {
+    $(imageArray).each(function(){
+        $('<img/>')[0].src = this;
+    });
+})(['https://source.unsplash.com/YQ3FpeQkNhA/800x600',
+	'https://source.unsplash.com/gGC63oug3iY/800x600',
+	'https://source.unsplash.com/PAcI-vmFL2g/800x600',
+	'https://source.unsplash.com/_d0zgyMmYT8/800x600']);
+
+// 3D flip slideshow
+(function bfCards(elements, speed) {
+	var cards = $('.cards');
+	var container = cards.children('.cards__container');
+	var front = container.children('.cards__front');
+	var back = container.children('.cards__back');
+
+	function swapArticleClass(element, newClass) {
+		element.removeClass(function(index, css) {
+			return (css.match(/(^|\s)card-\S+/g) || []).join(' ');
+		});
+
+		element.addClass(newClass);
+	}
+
+	var onTick = function(i) {
+		setTimeout(function() {
+			var nextClass;
+			var currentClass = 'card-' + i;
+
+			if (currentClass === elements)  {
+				nextClass = 'card-' + (i + 1);
+			} else {
+				nextClass = 'card-1';
+			}
+
+			if (i % 2 === 0) {
+				cards.addClass('is-flipped');
+				swapArticleClass(back, currentClass);
+				setTimeout(function() {
+					swapArticleClass(front, nextClass);
+				}, speed / 2);
+			} else {
+				cards.removeClass('is-flipped');
+				swapArticleClass(front, currentClass);
+				setTimeout(function() {
+					swapArticleClass(back, nextClass);
+				}, speed / 2);
+			}
+		}, speed * i);
+	};
+
+	function cycle() {
+		for (var i = 1; i <= elements; i++) {
+			onTick(i);
+		}
+	};
+
+	cycle();
+	setInterval(cycle, speed * elements);
+})(cardAmount, flipSpeed);
+            </script>
+
+{% include 'new/everypage_chat.html' %}
+{% comment %} {% include 'nav.html' %} {% endcomment %}
+<script>
+    window.addEventListener('click', function(e){
+      if (document.getElementById('chatbox').contains(e.target)){
+        // Clicked in box
+      }
+      else if(document.getElementById('attendee_popup').contains(e.target)){
+        document.getElementById('chatbox').style.display = "block";
+        $('#attendee_popup').css('color','black');
+      }
+      else{
+        document.getElementById('chatbox').style.display = "none";
+      }
+    });
+
+    $('#attendee_popup').click(function(){
+        document.getElementById('chatbox').style.display = "block";
+    })
+</script>
+
+<script>
+    new WOW().init();
+</script>
+
+    </div>
+</body>
+</html>

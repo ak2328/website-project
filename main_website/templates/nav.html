@@ -1,0 +1,26 @@
+  <div class="navbar_custom">
+    <ul><li><a href={{ back_button }}><i class="fas fa-arrow-left"></i></li><li>Back</a></li></ul>
+    <ul><li><a href="{% url 'main_website:first_floor' company_name=company_name stall_text=stall_text %}"><i class="far fa-building"></i></li><li>Meeting Room</a></li></ul>
+
+    <ul><li><a href="{% url 'main_website:lobby' company_name=company_name stall_text=stall_text %}"><i class="fas fa-home"></i></li><li>Lobby</a></li></ul>
+    {% if hall_array.0 %}
+        <ul><li><a href="{% url 'main_website:auditorium' company_name=company_name stall_text=stall_text %}"><i class="fa fa-building" aria-hidden="true"></i></li><li>{{ hall_array.0 }}</a></li></ul>
+    {% endif %}
+    {% if hall_array.1 %}
+        <ul><li><a href="{% url 'main_website:info_desk' company_name=company_name stall_text=stall_text %}"><i class="fas fa-info"></i></li><li>{{ hall_array.1 }}</a></li></ul>
+    {% endif %}
+    {% if hall_array.2 %}
+        <ul><li><a href="{% url 'main_website:exhibit_hall' company_name=company_name stall_text=stall_text %}"><i class="fa fa-university" aria-hidden="true"></i></li><li>{{ hall_array.2 }}</a></li></ul>
+    {% endif %}
+    {% if hall_array.3 %}
+        <ul><li><a href="{% url 'main_website:social_lounge' company_name=company_name stall_text=stall_text %}"><i class="fas fa-network-wired"></i></li><li>{{ hall_array.3 }}</a></li></ul>
+    {% endif %}
+
+    {% if hall_array.4 %}
+        <ul><li><a href="{% url 'main_website:partners_tab' company_name=company_name stall_text=stall_text %}"><i class="fas fa-network-wired"></i></li><li>{{ hall_array.4 }}</a></li></ul>
+    {% endif %}
+
+    <ul><div id = "attendee_popup"><li>{{ registered_users }}</li><li>Attendees</div></li></ul>
+
+    <ul><li><a href="{% url 'users:logout' company_name=company_name stall_text=stall_text %}"><i class="fas fa-sign-out-alt"></i></li><li>Log out</a></li></ul>
+ </div>

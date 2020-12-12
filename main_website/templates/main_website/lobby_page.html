@@ -1,0 +1,92 @@
+{% extends 'main_website/base.html' %}
+{% load static %}
+{% block content %}
+<audio id="audioplayer" autoplay loop id="playAudio">
+      <source src="https://webinarzappastatic.s3.ap-south-1.amazonaws.com/media/AUDIO-2020-07-17-22-01-13.mp3">
+</audio>
+
+<iframe src="https://webinarzappastatic.s3.ap-south-1.amazonaws.com/media/AUDIO-2020-07-17-22-01-13.mp3" allow="autoplay" style="display:none" id="iframeAudio">
+</iframe> 
+<script src="https://source.zoom.us/1.7.10/lib/vendor/jquery.min.js"></script>
+<script>	
+	var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+	if (!isChrome){
+		$('#iframeAudio').remove()
+	}
+	else {
+		$('#playAudio').remove() // just to make sure that it will not have 2x audio in the background 
+	}
+
+</script>
+{% if lobby_background_type == 'video' %}
+	<div id="main_page_video">
+		<video id="video" muted="" preload="auto" width="100%" height="100%" data-setup="{}" loop="" autoplay="" style="z-index: 0; position: absolute;">         
+		 <source src="{{ lobby_background_url.url }}" type="video/mp4"> 
+        </video>
+    </div>
+{% else %}
+		<img src="{{ lobby_background_url.url }}" preload="auto" data-setup="{}" loop="" autoplay="" style="z-index: 0; width:100%; height: 100%" /> 
+{% endif %}
+
+{% if hall_titles.0 %}
+<div id = 'hall_1' class = 'hall'>
+	<div class ='label'>
+		{{ hall_titles.0 }}
+	</div>
+	<div class = 'label_enter'>
+		<a href="{% url 'main_website:auditorium' company_name=company_name stall_text=stall_text %}" class="text-info m-l-5 "><b>Enter Here</b></a>
+	</div>
+</div>
+{% endif %}
+
+{% if hall_titles.1 %}
+<div id = 'hall_2' class = 'hall'>
+	<div class ='label'>
+		{{ hall_titles.1 }}				
+	</div>
+	<div class = 'label_enter'>
+		<a href="{% url 'main_website:info_desk' company_name=company_name stall_text=stall_text %}" class="text-info m-l-5 "><b>Enter Here</b></a>
+	</div>			
+
+</div>
+{% endif %}
+
+{% if hall_titles.2 %}
+
+	<div id = 'hall_3' class = 'hall '  >
+		<div class ='label'>
+			{{ hall_titles.2 }}	
+		</div>
+		<div class = 'label_enter'>
+			<a href="{% url 'main_website:exhibit_hall' company_name=company_name stall_text=stall_text %}" class="text-info m-l-5 "><b>Enter Here</b></a>
+		</div>	
+	</div>
+{% endif %}
+{% if hall_titles.3 %}	
+	<div id = 'hall_4' class = 'hall'>
+		<div class ='label'>
+				{{ hall_titles.3 }}				
+		</div>
+		<div class = 'label_enter'>
+			<a href="{% url 'main_website:social_lounge' company_name=company_name stall_text=stall_text %}" class="text-info m-l-5 "><b>Enter Here</b></a>
+		</div>
+	</div>		
+{% endif %}
+<!-- <img src="{{ lobby_background_url }}" preload="auto" width="10%" height="10%" class='left_lobby_image small_image' />  -->
+
+<div class="video-container lobby_video_container">
+	<iframe src="{{ lobby_video_link }}" allowfullscreen autoplay picture-in-picture > </iframe>
+</div>
+<!-- <img src="{{ lobby_background_url }}" preload="auto" width="10%" height="10%" class='right_lobby_image small_image' />  -->
+<!-- <div class= 'banner_image' >
+	<div class = 'resource_div'>
+		{% for link in banner_links %}
+			<div class = 'resource_link'>
+				<a href="{{ link.1 }}" class="text-info m-l-5 " style="position: relative;"><b> {{ link.0 }} </b></a>
+			</div>
+			
+		{% endfor %}
+	</div>
+</div> -->
+	
+{% endblock %}

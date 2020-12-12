@@ -1,0 +1,69 @@
+
+{% load static %}
+<div class='current_user' name='{{ user.mobile }}' id = "{{ current_user.id }}" style="display:hidden;">
+</div>
+<style>
+    #chatbox{
+        left: 86% !important;
+    }
+    .friend p {
+        padding: 0px;
+    }
+</style>
+<div id="chatbox" style='display: none; z-index:10000;'>
+    <div id="friendslist" style='overflow: scroll;'>
+        <div id="topmenu">
+            <span class="friends"></span>
+        </div>
+
+        <div id="friends">
+            <div class="friend" onclick="connect_chat_group()">
+                <p>
+                    <strong>Group Chat</strong>
+                </p>
+            </div>
+            {% for notification,user in users_chat %}
+                <div class="friend" id="user_id_{{  user.id }}" onclick="connect_chat(this.id,'{{ user.name }}')" >
+                    <p>
+                        <strong>{{ user.name }}</strong>
+                        ( {{ user.email_id }} )
+                        {% if notification != 0 %}
+                            <span style='float: right; background-color: red; padding: 5px; border-radius: 19px; color:white;'>{{ notification }}</span>
+                        {% else %}
+                            <span style='float: right; background-color: red; padding: 5px; border-radius: 19px; color:white; opacity: 0;'>0</span>
+                        {% endif %}
+                    </p>
+                </div>
+            {% endfor %}
+
+        </div>
+    </div>
+
+    <div class="p1" id="chatview">
+        <div id="profile">
+
+            <div id="close">
+                <div class="cy"></div>
+                <div class="cx"></div>
+            </div>
+
+            <p>Miro Badev</p>
+<!--            <span>miro@badev@gmail.com</span>-->
+        </div>
+        <div id="chat-messages">
+            <!-- <label>Thursday 02</label> -->
+
+
+        </div>
+
+        <div id="sendmessage">
+            <input id="chat-message-input" type="text" value=""/>
+            <button id="send"></button>
+        </div>
+    </div>
+</div>
+
+    <script src="{% static 'main_website/chat_box.js' %}"></script>
+    <script src="{% static 'main_website/websocket.js' %}"></script>
+    <script src="{% static 'main_website/websocket_group.js' %}"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js"></script>

@@ -1,0 +1,137 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reconnecting-websocket/1.0.0/reconnecting-websocket.min.js"></script>
+    <link href="{% static 'new/page6/style.css' %}" rel="stylesheet">
+    <script crossorigin="anonymous" src="https://kit.fontawesome.com/73b6dfc8d5.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css" rel="stylesheet"/>
+    <link href="{% static 'new/page6/navbar.css' %}" rel="stylesheet">
+    <script src="{% static 'main_website/dataanalytics_websocket.js' %}"></script>
+    <link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" rel="stylesheet">
+    <audio id="myAudio">
+      <source src="https://webinarzappastatic.s3.ap-south-1.amazonaws.com/media/WhatsApp+Audio+2020-09-06+at+3.02.16+PM.mpeg" type="audio/mpeg">
+      Your browser does not support the audio element.
+    </audio>          
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-migrate-3.0.0.min.js"></script>
+    <script crossorigin="anonymous"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script crossorigin="anonymous"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="{% static 'main_website/chat_box.css' %}" />            
+    <title></title>
+    <style>
+       @media (orientation:portrait){
+	        #wrapper { display:none; }
+	        #warning-message { display:block; }
+	    }
+	    @media (orientation: landscape) {
+	        #warning-message { display:none; }
+	    }
+    </style>
+</head>
+<body>
+<img src = {{ background_image.url }} style="width: 100%; height: 100%; position: absolute;"/>
+<!--style="background: url({{ background_image.url }}); background-repeat: no-repeat;&ndash;&gt;-->
+<!--    background-size: contain;">-->
+<style>
+    .stall_image{
+        width: 17%;
+        height: 17%;
+        position: absolute;
+    }
+    .stall_image_bottom{
+        width: 20%;
+        height: 26%;
+        position: absolute;
+    }
+    .stall_image1{
+        top: 27%;
+        left: 5%;
+    }
+    .stall_image2{
+        top: 27%;
+        left: 27%;
+    }
+    .stall_image3{
+        top: 27%;
+        left: 50%;
+    }
+    .stall_image4{
+        top: 27%;
+        left: 74%;
+        width: 21% !important;
+    }
+    .stall_image5{
+        top: 53%;
+        left: 0%;
+    }
+    .stall_image6{
+        top: 54%;
+        left: 26%;
+    }
+    .stall_image7{
+        top: 54%;
+        left: 51%;
+    }
+    .stall_image8{
+        top: 54%;
+        left: 81%;
+        width: 19%;
+    }
+
+</style>
+<div id='wrapper'>
+        <a href="{% url 'main_website:stall_details' company_name=company_name stall_text=text.0  %}" class="stall_image stall_image1"></a>
+        <a href="{% url 'main_website:stall_details' company_name=company_name stall_text=text.1  %}" class="stall_image stall_image2"></a>
+        <a href="{% url 'main_website:stall_details' company_name=company_name stall_text=text.2  %}" class="stall_image stall_image3"></a>
+        <a href="{% url 'main_website:stall_details' company_name=company_name stall_text=text.3  %}" class="stall_image stall_image4"></a>
+        <a href="{% url 'main_website:stall_details' company_name=company_name stall_text=text.4  %}" class="stall_image_bottom stall_image5"></a>
+        <a href="{% url 'main_website:stall_details' company_name=company_name stall_text=text.5  %}" class="stall_image_bottom stall_image6"></a>
+        <a href="{% url 'main_website:stall_details' company_name=company_name stall_text=text.6  %}" class="stall_image_bottom stall_image7"></a>
+        <a href="{% url 'main_website:stall_details' company_name=company_name stall_text=text.7  %}" class="stall_image_bottom stall_image8"></a>
+    <div class="page">
+        <!-- <img src="{{ background_image.url }}" class="bg" alt=""> -->
+
+
+        {% include 'new/everypage_chat.html' %}
+        {% include 'nav.html' %}
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js"></script>
+        <script>
+        new WOW().init();
+        </script>
+    </div>
+</div>
+
+
+<script>
+    window.addEventListener('click', function(e){   
+      if (document.getElementById('chatbox').contains(e.target)){
+        // Clicked in box
+      }
+      else if(document.getElementById('attendee_popup').contains(e.target)){
+        document.getElementById('chatbox').style.display = "block";
+      }
+      else{
+        document.getElementById('chatbox').style.display = "none";
+      }
+    });
+
+    $('#attendee_popup').click(function(){
+        document.getElementById('chatbox').style.display = "block";
+    })
+</script>
+
+
+<div id='warning-message' style='background-color: black;'>
+    <img src="https://www.robscanlon.com/pleaserotate/demo.gif" style='width:100%;height: 100%;'></img>
+    <h1 style="font-size: 40px; color:white; position: absolute; top:0%; text-align: center;">Please rotate Mobile </h1>
+</div>
+</body>
+</html>

@@ -1,0 +1,29 @@
+.navbar_custom {
+  width: 100%;
+  height: 7%;
+  position: fixed;
+  bottom: 0;
+  background: white;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  font-size: 0.8vw;
+  text-align: center;
+  z-index: 100;
+}
+
+.navbar_custom li {
+  list-style: none;
+}
+
+.navbar_custom a {
+  color: black;
+  outline: none;
+  text-decoration: none;
+}
+/*# sourceMappingURL=navbar.css.map */

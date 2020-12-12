@@ -1,0 +1,89 @@
+{% extends 'base2.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content %}
+<style>
+    .errorlist
+    {
+        color: red;
+    }
+</style>
+        <div class="auth-box">
+                <div>
+<!--                     <div class="logo">
+                        <span class="db"><img src="{{ logo.url }}" alt="logo" height="75px" width="75px"/></span>
+                        <br><br>
+                        <h5 class="font-medium m-b-20">Sign Up</h5>
+                    </div> -->
+                    <!-- Form -->
+                    <div class="row">
+                        <div class="col-12">
+                            <form class="form-horizontal m-t-20" method = 'post'>
+                                {% csrf_token %}
+                                <!-- {{ agency_form.non_field_errors }} -->
+                                {{ registration_form.non_field_errors }}
+                                {% for field in registration_form.visible_fields %}
+                                {{ field.label_tag }}
+                                <div class="input-group mb-3">
+                                    {% render_field field class="form-control form-control-lg" %}
+                                </div>
+                                {{ field.errors }}
+                                {% endfor %}
+                                
+                                
+                                <div class="form-group text-center ">
+                                    <div class="col-xs-12 p-b-20 ">
+                                        <button class="btn btn-block btn-lg btn-info" >Sign Up</button>
+                                    </div>
+                                </div>
+
+                                <div class="form-group m-b-0 m-t-10 ">
+                                    <div class="col-sm-12 text-center ">Already have a account? 
+                                        <a href="{% url 'users:login' company_name=company_name stall_text=stall_text %}" class="text-info m-l-5 "><b>Sign In</b></a>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <!-- ============================================================== -->
+        <!-- Login box.scss -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Page wrapper scss in scafholding.scss -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Page wrapper scss in scafholding.scss -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Right Sidebar -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Right Sidebar -->
+        <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- All Required js -->
+    <!-- ============================================================== -->
+
+    <script src="{% static 'assets/libs/jquery/dist/jquery.min.js' %}"></script>
+    <!-- Bootstrap tether Core JavaScript -->
+    <script src="{% static 'assets/libs/popper.js/dist/umd/popper.min.js' %}"></script>
+    <script src="{% static 'assets/libs/bootstrap/dist/js/bootstrap.min.js' %}"></script>
+    <!-- ============================================================== -->
+    <!-- This page plugin js -->
+    <!-- ============================================================== -->
+    <script>
+//    $('[data-toggle="tooltip "]').tooltip();
+    $('label[for="id_mobile"]').hide ();
+    $('label[for="id_email"]').text('Email Address (Optional):')
+
+    // $('label:nth-child(4)').hide();
+    $('#id_mobile').css('display','none');    
+    $(".preloader ").fadeOut();
+    </script>
+</body>
+
+</html>
+{% endblock %}

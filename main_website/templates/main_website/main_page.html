@@ -1,0 +1,72 @@
+<html>
+	<head>
+		<style>
+			#lobby_url{
+				position: absolute !important;
+				top: 50.9% !important;
+				left: 46.2% !important;
+			    color: white;
+			    font-size: 1em;
+			    background-color: white;
+			    border-radius: 3px;
+			    padding:5px;
+			    height: 3%;
+			    animation: blinkingBackground 2s infinite;
+			    width: 8.05%;
+			    text-align: center;
+			}		
+			b{
+				color: white;
+
+			}
+			@keyframes blinkingBackground{
+					0%		{ background-color: #10c018;}
+					25%		{ background-color: #1056c0;}
+					50%		{ background-color: #ef0a1a;}
+					75%		{ background-color: #254878;}
+					100%	{ background-color: #04a1d5;}
+				}
+
+		    @media (orientation:portrait){
+		        #wrapper { display:none; }
+		        #warning-message { display:block; }
+		    }
+		    @media (orientation:landscape){
+		        #warning-message { display:none; }
+		    }	
+
+		</style>
+
+	</head>
+	<body>
+
+		<div id='wrapper' >
+			<div id='content-desktop visible-xs'>
+				{% if background_type == 'video' %}
+					<div id="main_page_video">
+						<video id="video" muted="" preload="auto" width="100%" height="100%" data-setup="{}" loop="" autoplay="" style="z-index: 0; position: absolute; top:0%; left:0%;">         
+						 <source src="{{ background_url.url }}" type="video/mp4"> 
+				        </video>
+				    </div>
+				{% else %}
+					<div id="main_page_image">
+						<img src="{{ background_url.url }}" preload="auto" width="100%" height="100%" data-setup="{}" loop="" autoplay="" style="z-index: 0" /> 
+					</div>
+				{% endif %}
+				<div id="lobby_url">
+					<a href="{% url 'main_website:lobby' company_name=company_name stall_text=stall_text %}" class="text-info m-l-5 " style="text-decoration:none;" id='enter_lobby'><b>Enter Lobby</b></a>
+				</div>
+			</div>
+<!-- 			<div id='content-mobile visible-sm'>
+				<div id="main_page_image">
+						<img src="https://webinarzappastatic.s3.ap-south-1.amazonaws.com/media/WhatsApp+Image+2020-07-17+at+10.44.08.jpeg" preload="auto" width="100%" height="100%" /> 
+				</div>
+			</div>
+ -->		</div>
+		<div id='warning-message' style='background-color: black;'>
+			<img src="https://www.robscanlon.com/pleaserotate/demo.gif" style='width:100%;height: 100%;'></img>
+			<h1 style="font-size: 40px; color:white; position: absolute; top:0%; text-align: center;">Please rotate Mobile </h1>
+
+		</div>		
+	</body>
+<html>

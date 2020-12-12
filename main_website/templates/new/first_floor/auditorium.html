@@ -1,0 +1,218 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>{{ company_name }}</title>
+    <link href="{% static 'new/page3/style.css' %}" rel="stylesheet">
+    
+    <link href="{% static 'new/page3/navbar.css' %}" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css" rel="stylesheet"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-migrate-3.0.0.min.js"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">    
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reconnecting-websocket/1.0.0/reconnecting-websocket.min.js"></script>
+    <audio id="myAudio">
+      <source src="https://webinarzappastatic.s3.ap-south-1.amazonaws.com/media/WhatsApp+Audio+2020-09-06+at+3.02.16+PM.mpeg" type="audio/mpeg">
+      Your browser does not support the audio element.
+    </audio>
+    <script src="{% static 'main_website/dataanalytics_websocket.js' %}"></script>
+
+    <link rel="stylesheet" href="{% static 'main_website/chat_box.css' %}" />
+
+    <style>
+       @media (orientation:portrait){
+	        #wrapper { display:none; }
+	        #warning-message { display:block; }
+	    }
+	    @media (orientation: landscape) {
+	        #warning-message { display:none; }
+	    }
+    </style>
+
+</head>
+<body>
+<div id='wrapper'>
+    <div class="page_custom" style="background-image: url('{{ auditorium_background_image.url }}')">
+
+        <button class="main-btn btn-1 wow animate__slideInLeft " data-target="#chatModal2" data-toggle="modal"
+                data-wow-delay="3s" data-wow-duration="2s">Q/A
+        </button>
+        <button class="main-btn btn-2 wow animate__slideInLeft" data-target="#myModal" data-toggle="modal"
+                data-wow-delay="3s"
+                data-wow-duration="2s" type="button">Agenda
+        </button>
+        {% if poll_status == False %}
+            <button class="main-btn btn-3 wow animate__slideInRight" data-target="#pollingModal" data-toggle="modal"
+                    data-wow-delay="3s"
+                    data-wow-duration="2s" type="button">Polling
+            </button>
+        {% else %}
+            <button class="main-btn btn-3 wow animate__slideInRight" data-target="#pollingResults" data-toggle="modal"
+                    data-wow-delay="3s"
+                    data-wow-duration="2s" type="button">Polling Results
+            </button>
+        {% endif %}  
+        
+        <iframe allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen
+                class="vdo wow animate__fadeIn" data-wow-delay="1.5s"
+                frameborder="0" src="{{ auditorium_youtube_name }}"></iframe>
+
+
+        <!-- THis is polling modal -->
+        <div class="modal fade" id="pollingModal" role="dialog">
+            <div class="modal-dialog" style="display:table; max-width: 100%; width: 80%; max-height: 100%; height:80%;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <span>Polling Question</span>
+                        <button class="close" data-dismiss="modal" type="button">&times;</button>
+                    </div>
+                    <br>
+                    {% for poll in polls %}
+                    <form method="POST" action="{% url 'main_website:submit_polling_results' company_name=company_name stall_text=stall_text  %}">
+                    {% csrf_token %}
+                    
+                        <label style="margin-left: 15px" value={{poll.question_id}} name="question_id">{{poll.question}}</label><br><br>
+
+                        <input style="margin-left: 15px" type="radio" name="options" value="{{poll.option_one}}">&nbsp;{{poll.option_one}}
+                        <input style="margin-left: 15px" type="radio" name="options" value="{{poll.option_two}}">&nbsp;{{poll.option_two}}
+                        <input style="margin-left: 15px" type="radio" name="options" value="{{poll.option_three}}">&nbsp;{{poll.option_three}}
+                        <input style="margin-left: 15px" type="radio" name="options" value="{{poll.option_four}}">&nbsp;{{poll.option_four}}
+                        <input type="hidden" value="{{poll.question_id}}" name="question_id">
+                    {% endfor %}
+                    <div class="modal-footer">
+                        <input type="submit" class="btn btn-default" type="button">
+                        <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
+                    </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="modal fade" id="pollingResults">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+              
+                <!-- Modal Header -->
+                <div class="modal-header">
+                  <h4 class="modal-title">Pooling Results</h4>
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                
+                <!-- Modal body -->
+                <div class="modal-body">
+                    {% for poll in polls %}
+                    <label style="margin-left: 15px" value={{poll.question_id}} name="question_id">{{poll.question}}</label><br><br>
+                    <div style="margin-left: 20px;">
+                    <ul>
+                        &nbsp;&nbsp;&nbsp;&nbsp;   <li>Votes for {{poll.option_one}}&nbsp;&nbsp;&nbsp;&nbsp;{{poll_result.0}}</li>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<li>Votes for {{poll.option_two}}&nbsp;&nbsp;&nbsp;&nbsp;{{poll_result.1}}</li>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<li>Votes for {{poll.option_three}}&nbsp;&nbsp;&nbsp;&nbsp;{{poll_result.2}}</li>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<li>Votes for {{poll.option_four}}&nbsp;&nbsp;&nbsp;&nbsp;{{poll_result.3}}</li>
+                    </ul>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+                
+              </div>
+            </div>
+          </div>
+
+
+        <div class="modal fade" id="myModal" role="dialog">
+            <div class="modal-dialog" style="display:table; max-width: 100%; width: 80%; max-height: 100%; height:80%;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button class="close" data-dismiss="modal" type="button">&times;</button>
+                    </div>
+                    <iframe allowfullscreen autoplay picture-in-picture src="{{ auditorium_keynote_track }}"
+                            style='width:100%; height:700px;'></iframe>
+                    <div class="modal-footer">
+                        <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="modal fade" id="chatModal2" role="dialog">
+            <div class="modal-dialog" style="display:table; max-width: 100%; width: 80%; max-height: 50%; height:50%;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        Ask a Question
+                        <button class="close" data-dismiss="modal" type="button">&times;</button>
+                    </div>
+
+                    <div class="modal-footer" id="sendmessage2">
+                        <input id="chat-message-input2" style='width:100%; height: 100%;' type="text"/>
+                        <button class="btn btn-default" id='send2' type="button">Send</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div id='warning-message' style='background-color: black;'>
+    <img src="https://www.robscanlon.com/pleaserotate/demo.gif" style='width:100%;height: 100%;'></img>
+    <h1 style="font-size: 40px; color:white; position: absolute; top:0%; text-align: center;">Please rotate
+        Mobile </h1>
+</div>
+
+<script>
+  $('#chat-message-input2').keydown(function(event){ 
+      var keyCode = (event.keyCode ? event.keyCode : event.which);   
+      if (keyCode == 13) {
+        var question = this.value;
+
+        $.ajax({
+          url: '{% url "main_website:question" %}',
+          data: {
+            'question': question
+          },
+          dataType: 'json',
+          success: function (data) {
+              alert("Question Submitted");
+          }
+        });
+      }
+  });
+</script>
+
+{% include 'new/everypage_chat.html' %}
+{% include 'nav.html' %}
+<script>
+    window.addEventListener('click', function(e){   
+      if (document.getElementById('chatbox').contains(e.target)){
+        // Clicked in box
+      }
+      else if(document.getElementById('attendee_popup').contains(e.target)){
+        document.getElementById('chatbox').style.display = "block";
+        $('#attendee_popup').css('color','black');
+      }
+      else{
+        document.getElementById('chatbox').style.display = "none";
+      }
+    });
+
+    $('#attendee_popup').click(function(){
+        document.getElementById('chatbox').style.display = "block";
+    })
+</script>
+
+<script>
+    new WOW().init();
+</script>
+
+</div>
+</body>
+</html>

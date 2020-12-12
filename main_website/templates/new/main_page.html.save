@@ -1,0 +1,53 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'new/page1/style.css' %}">
+    <script src="https://kit.fontawesome.com/73b6dfc8d5.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css"/>
+    <link rel="stylesheet" href="{% static 'new/page1/navbar.css' %}">
+    <title></title>
+</head>
+<body>
+    <div class="page">
+        {% for link in banner_links %}
+		     <a href="{{ link.1 }}"><button data-wow-duration="2s" class=" gbtn btn2 animate__animated animate__fadeIn" style="top: 58%; left: 20%;"><b> {{ link.0 }} </b></button></a>
+        {% endfor %}
+
+    </div>
+    <div data-wow-duration="2s" class="pic-wrapper ">
+        <figure class="pic-1 pic"></figure> 
+        <figure class="pic-2 pic"></figure>
+        <figure class="pic-3 pic"></figure>
+        <figure class="pic-4 pic"></figure>
+      </div>
+    <a href="{% url 'main_website:lobby' company_name=company_name stall_text=stall_text %}" class="text-info m-l-5 " style="text-decoration:none;" id='enter_lobby'>
+     <div data-wow-duration="2s" class="event_btn animate__animated animate__backInLeft wow">
+         <p style="color: #2F5EBC; font-size: 1.4vw;"> <b>Event Area</b></p><p>First Floor</p>
+     </div>
+</a>
+
+
+<div class="flip-card">
+    <div class="flip-card-inner">
+      <div class="flip-card-front">
+        <img src="{{ main_page_front_banner_image.url }}" alt="Banner" >
+      </div>
+      <div class="flip-card-back">
+        <img src="{{ main_page_back_banner_image.url }}" alt="Banner" >
+      </div>
+    </div>
+  </div>
+{% include 'nav.html' %}
+
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js"></script>
+    <script>
+        new WOW().init();
+        </script>
+
+</body>
+</html>

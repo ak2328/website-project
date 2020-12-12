@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+{% load static %}
+{% load widget_tweaks %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{% static 'dist/css/style.css' %}" rel="stylesheet">
+    <!-- <link rel="stylesheet" href="style.css"> -->
+    <title>Document</title>
+    <style>
+        input{
+            text-align: left; margin-left: 0px; font-size: 1em;
+        }
+        label{
+            display: flex;
+            padding-left: 30px;
+            margin-top: 10px;
+        }
+        .errorlist
+        {
+            color: red;
+        }      
+         form {
+          margin-left: 15%;
+        }
+
+        form input{
+          width: 85% !important;
+        } 
+    </style>
+</head>
+<body style='background-image: url(https://webinarzappastatic.s3.ap-south-1.amazonaws.com/media/reg+page+.jpg)'> 
+    <div class="container">
+    <div id="mainDiv">
+        <div id="boxDiv">
+            <div id="front" style="background-image: url({{ rotating_image.url }}")></div>
+            <div id="back" style="background-image: url({{ rotating_image.url }}")></div>
+            <div id="left" style="background-image: url({{ rotating_image.url }}")></div>
+            <div id="right" style="background-image: url({{ rotating_image.url }}")></div>
+            <div id="top" style="background-image: url({{ rotating_image.url }}")></div>
+            <div id="bottom" style="background-image: url({{ rotating_image.url }})"></div>
+            <div class="shadow"></div>
+        </div>
+    </div>
+    <div class="login">
+        <div class="box">
+<!--           <h1 style="margin-top: 5vh; ">  {{ heading }}</h1>
+             <p> <h2> {{ subheading }} <br></h2> -->
+<!--               <h4 style="color: #258CF2;">13-14-15-16th August 2020 </h4> -->
+            </p>
+       <p style="font-size: 17.5px; margin-top: 2vh;">Register For This Event</p>
+    
+        <p style="font-size: 12.5px;">Fill the Details Below to Enter Virtual World</p>
+        <br>
+<!--         <p style="text-align: left; margin-left: 122px; font-size: 13px;">
+            Mobile:
+        </p> -->
+        <form action="{% url 'users:register' company_name=company_name stall_text=stall_text %}" name="registerForm" method= 'post' onsubmit="return checkEmailValidity();">
+            {% csrf_token %}
+            {{ registration_form.non_field_errors }}
+
+                <label for="id_name">Name:</label>
+                <div class="input-group mb-3">
+                    <input type="text" required name="name" maxlength="20" class="form-control form-control-lg"  id="id_name">
+                </div>
+
+
+                <label for="id_mobile" style="display: none;">Mobile:</label>
+                <div class="input-group mb-3">
+                    <input type="text" name="mobile" value="XF6EM3TDWTW72C8A43BJKVKK6" maxlength="30" class="form-control form-control-lg" required="" id="id_mobile" style="display: none;">
+                </div>
+
+
+                <label for="id_mobile_number_form">Mobile Number:</label>
+                <div class="input-group mb-3">
+                    <input type="text" name="mobile_number_form" maxlength="30" class="form-control form-control-lg" required="" id="id_mobile_number_form">
+                </div>
+
+                <label for="id_email" >Email:</label>
+                <div class="input-group mb-3">
+                    <input type="email" required name="email" maxlength="254" class="form-control form-control-lg" id="id_email">
+                </div>
+
+		<label for="cars">Designation:</label>
+                <div class="input-group mb-3">
+                    <input type="text" required name="designation" maxlength="254" class="form-control form-control-lg" id="id_designation">
+                </div>
+                <label for="id_email_id">{{additional_login_field}}:</label>
+                <div class="input-group mb-3">
+                    <input type="text" required name="email_id" maxlength="254" class="form-control form-control-lg" id="id_email_id">
+                </div>
+
+
+               <label for="cars">Type of Available Services:</label>
+                <div class="input-group mb-3">
+			<select name="type_of_available_services" id="id_type_of_available_services" style="width: 87%;">
+                  <option value="Prebiotics">Prebiotics</option>
+                  <option value="Probiotics">Probiotics</option>
+                  <option value="Fortification Services">Fortification Services </option>
+                  <option value="Nutraceuticals">Nutraceuticals</option>
+                  <option value="Lab Testing">Lab Testing</option>
+                  <option value="Analytical Services">Analytical Services</option>
+                  <option value="Ayurvedic Supplements">Ayurvedic Supplements</option>
+                  <option value="Immunity & Health Supplements">Immunity & Health Supplements</option>
+			</select>
+		</div>
+               <label for="cars">When do you plan to Implement:</label>
+                <div class="input-group mb-3">
+                        <select name="when_do_you_plan_to_implement" id="id_when_do_you_plan_to_implement" style="width: 87%;">
+                          <option value="0-3 Months">0-3 MONTHS </option>
+                          <option value="3-6 Months">3-6 MONTHS </option>
+                          <option value="More Than 6 M">MORE THAN 6 M</option>
+                        </select>
+                </div>
+            <br>
+            <button type="submit" >Sign Up</button><br>
+            <p style="font-size: 14px;">Already have account <a href="{% url 'users:login' company_name=company_name stall_text=stall_text %}">Login</a></p>
+        </form>
+
+       
+        </div>
+    </div>
+ </div>   
+     <script src="{% static 'assets/libs/jquery/dist/jquery.min.js' %}"></script>
+    <!-- Bootstrap tether Core JavaScript -->
+    <!-- <script src="{% static 'assets/libs/popper.js/dist/umd/popper.min.js' %}"></script> -->
+    <!-- <script src="{% static 'assets/libs/bootstrap/dist/js/bootstrap.min.js' %}"></script> -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+
+    function checkEmailValidity(){
+    // Check for email validation
+
+    var email = document.forms["registerForm"]["id_email"].value;
+    var checkIndex = email.indexOf("@its.jnj.com");
+    console.log("this is email",email);
+//        if(checkIndex<1){
+//            alert("please enter a email with suffix @its.jnj.com");
+//            return false;
+//        }
+   }
+
+    $( document ).ready(function(){
+        // debugger;
+        $('label[for="id_password"]').hide ();
+        $('#id_password').css('display','none');            
+        $('#id_password').css('display','none');
+        $('label[for="id_mobile"]').hide ();
+        // $('label[for="id_email"]').text('Email Address (Optional):')
+
+        // $('label:nth-child(4)').hide();
+        $('#id_mobile').css('display','none');            
+        document.getElementById('id_password').value = 123;        
+        document.getElementById('id_password').value = 123;                
+    })
+
+    $(".preloader").fadeOut();    
+</script> 
+</body>
+</html>

@@ -1,0 +1,90 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="{% static 'new/page2/style.css' %}">
+     <link rel="stylesheet" href="{% static 'new/page2/navbar.css' %}">
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/reconnecting-websocket/1.0.0/reconnecting-websocket.min.js"></script>
+    <script src="https://kit.fontawesome.com/73b6dfc8d5.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css"/>
+    <link rel="stylesheet" href="{% static 'main_website/chat_box.css' %}" />
+    <script src="{% static 'main_website/dataanalytics_websocket.js' %}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <script src="https://code.jquery.com/jquery-migrate-3.0.0.min.js"></script>
+    <title>{{ company_name }}</title>
+        <style>
+       @media (orientation:portrait){
+	        #wrapper { display:none; }
+	        #warning-message { display:block; }
+	    }
+	    @media (orientation: landscape) {
+	        #warning-message { display:none; }
+	    }
+
+	    .btn1 {
+	    	top: 46%;
+    		left: 22.5%;
+		}
+		.btn2 {
+			top: 46%;
+			left: 43.95%;
+		}
+		.btn3 {
+			top: 46%;
+			left: 66.4%;
+		}
+
+
+    </style>
+        <audio id="myAudio">
+          <source src="https://webinarzappastatic.s3.ap-south-1.amazonaws.com/media/WhatsApp+Audio+2020-09-06+at+3.02.16+PM.mpeg" type="audio/mpeg">
+          Your browser does not support the audio element.
+        </audio>
+</head>
+<body>
+<img src = "https://synnexdoc.s3.ap-south-1.amazonaws.com/mee.jpg" style="width:100%; position:absolute; height: 100%;" />
+<div id='wrapper'>
+    <div class="page" >
+		<button class="default-btn btn1"><a href="{% url 'main_website:first_floor_link1' company_name=company_name stall_text=stall_text %}" style="text-decoration: none;"><p class="animate__slideInUp wow"data-wow-duration="2s">Meeting Room 1</p></a></button>
+		<button class="default-btn btn2" ><a onclick="myFunction()" href="{% url 'main_website:first_floor_link2' company_name=company_name stall_text=stall_text %}" style="text-decoration: none;"><p class="animate__slideInUp wow"data-wow-duration="2s">Meeting Room 2</p></a></button>
+		<button class="default-btn btn3"><a  href="{% url 'main_website:first_floor_link3' company_name=company_name stall_text=stall_text %}" style="text-decoration: none;"><p class="animate__slideInUp wow"data-wow-duration="2s">Meeting Room 3</p></a></button>
+    </div>
+
+
+
+</div>
+{% include 'new/everypage_chat.html' %}
+ {% include 'nav.html' %}
+<div id='warning-message' style='background-color: black;'>
+    <img src="https://www.robscanlon.com/pleaserotate/demo.gif" style='width:100%;height: 100%;'></img>
+    <h1 style="font-size: 40px; color:white; position: absolute; top:0%; text-align: center;">Please rotate Mobile </h1>
+</div>
+<script>
+    window.addEventListener('click', function(e){
+      if (document.getElementById('chatbox').contains(e.target)){
+        // Clicked in box
+      }
+      else if(document.getElementById('attendee_popup').contains(e.target)){
+        document.getElementById('chatbox').style.display = "block";
+        $('#attendee_popup').css('color','black');
+      }
+      else{
+        document.getElementById('chatbox').style.display = "none";
+      }
+    });
+
+    $('#attendee_popup').click(function(){
+        document.getElementById('chatbox').style.display = "block";
+        $('#attendee_popup').css('color','black');
+    })
+</script>
+    <script>
+        new WOW().init();
+        </script>
+
+</body>
+</html>

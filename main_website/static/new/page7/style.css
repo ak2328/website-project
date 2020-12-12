@@ -1,0 +1,405 @@
+* {
+  margin: 0px;
+  padding: 0px;
+}
+
+body {
+  background: #f0f1f2;
+  font: 12px "Open Sans", sans-serif;
+}
+
+/* .bg
+{
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+} */
+#chatbox {
+  width: 15.1vw;
+  background: #fff;
+  border-radius: 0.3125vw;
+  overflow: hidden;
+  height: 51.65421558164354vh;
+  position: absolute;
+  top: 10%;
+  left: 80%;
+}
+
+#friendslist {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 15.1vw;
+  height: 51.65421558164354vh;
+}
+
+#topmenu {
+  height: 7.363927427961579vh;
+  width: 30.94983991462113vh;
+  border-bottom: 1px solid #d8dfe3;
+}
+
+#topmenu span {
+  float: left;
+  width: 5vw;
+  height: 7.4706510138740665vh;
+  background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/245657/top-menu.png") -0.15625vw -6.14583vw no-repeat;
+}
+
+#topmenu span.friends {
+  margin-bottom: -0.052083333333333336vw;
+  background: blue;
+}
+
+#topmenu span.chats {
+  background-position: -4.947916666666667vw 1.3020833333333333vw;
+  cursor: pointer;
+}
+
+#topmenu span.chats:hover {
+  background-position: -4.947916666666667vw -2.3958333333333335vw;
+  cursor: pointer;
+}
+
+#topmenu span.history {
+  background-position: -9.895833333333334vw 1.25vw;
+  cursor: pointer;
+}
+
+#topmenu span.history:hover {
+  background-position: -9.895833333333334vw -2.4479166666666665vw;
+  cursor: pointer;
+}
+
+.friend {
+  height: 7.4706510138740665vh;
+  border-bottom: 0.052083333333333336vw solid #e7ebee;
+  position: relative;
+}
+
+.friend:hover {
+  background: #f1f4f6;
+  cursor: pointer;
+}
+
+.friend img {
+  width: 2.0833333333333335vw;
+  border-radius: 50%;
+  margin: 0.78125vw;
+  float: left;
+}
+
+.floatingImg {
+  width: 2.0833333333333335vw;
+  border-radius: 50%;
+  position: absolute;
+  top: 0;
+  left: 0.625vw;
+  border: 0.15625vw solid #fff;
+}
+
+.friend p {
+  padding: 0.78125vw 0 0 0;
+  float: left;
+  width: 11.458333333333334vw;
+  padding-left: 1.0416666666666667vw;
+}
+
+.friend p strong {
+  font-weight: 600;
+  font-size: 0.78125vw;
+  color: #597a96;
+}
+
+.friend p span {
+  font-size: 0.6770833333333334vw;
+  font-weight: 400;
+  color: #aab8c2;
+  /*margin-left: 5px;*/
+}
+
+.friend .status {
+  background: #26c281;
+  border-radius: 50%;
+  width: 0.46875vw;
+  height: 0.96051227321238vh;
+  position: absolute;
+  top: 31px;
+  right: 17px;
+}
+
+.friend .status.away {
+  background: #ffce54;
+}
+
+.friend .status.inactive {
+  background: #eaeef0;
+}
+
+#searchfield:focus {
+  outline: 0;
+}
+
+#chatview {
+  width: 15.104166666666666vw;
+  height: 51.65421558164354vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: none;
+  background: #fff;
+}
+
+#profile {
+  height: 16.328708644610458vh;
+  width: 100%;
+  overflow: hidden;
+  text-align: center;
+  color: #fff;
+}
+
+.p1 #profile {
+  background: #fff url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/245657/timeline1.png") 0 0;
+}
+
+#profile .avatar {
+  width: 3.5416666666666665vw;
+  border: 0.15625vw solid #fff;
+  margin: 1.1979166666666667vw 0 0;
+  border-radius: 50%;
+}
+
+#profile p {
+  font-weight: 600;
+  font-size: 0.78125vw;
+  margin: 6.145833333333333vw 0 -0.052083333333333336vw;
+  opacity: 0;
+  -webkit-transition: all 200ms cubic-bezier(0, 0.995, 0.99, 1);
+  transition: all 200ms cubic-bezier(0, 0.995, 0.99, 1);
+}
+
+#profile p.animate {
+  margin-top: 10.352187833511206vh;
+  opacity: 1;
+  -webkit-transition: all 200ms cubic-bezier(0, 0.995, 0.99, 1);
+  transition: all 200ms cubic-bezier(0, 0.995, 0.99, 1);
+}
+
+#profile span {
+  font-weight: 400;
+  font-size: 0.5729166666666666vw;
+}
+
+#chat-messages {
+  opacity: 0;
+  margin-top: 1.5625vw;
+  width: 15.104166666666666vw;
+  height: 28.8153681963714vh;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding-right: 1.0416666666666667vw;
+  -webkit-transition: all 200ms cubic-bezier(0, 0.995, 0.99, 1);
+  transition: all 200ms cubic-bezier(0, 0.995, 0.99, 1);
+}
+
+#chat-messages.animate {
+  opacity: 1;
+  margin-top: 0;
+}
+
+#chat-messages label {
+  color: #aab8c2;
+  font-weight: 600;
+  font-size: 0.625vw;
+  text-align: center;
+  margin: 0.78125vw 0;
+  width: 15.104166666666666vw;
+  display: block;
+}
+
+#chat-messages div.message {
+  padding: 0 0 1.5625vw 3.0208333333333335vw;
+  clear: both;
+  margin-bottom: 2.34375vw;
+  padding-left: 0.5208333333333334vw;
+}
+
+#chat-messages div.message.right {
+  padding: 0 3.0208333333333335vw 1.5625vw 0;
+  margin-right: -0.9895833333333334vw;
+  margin-left: 0.9895833333333334vw;
+  padding-right: 0.5208333333333334vw;
+}
+
+#chat-messages .message img {
+  float: left;
+  margin-left: -1.9791666666666667vw;
+  border-radius: 50%;
+  width: 1.5625vw;
+  margin-top: 12px;
+}
+
+#chat-messages div.message.right img {
+  float: right;
+  margin-left: 0;
+  margin-right: -1.9791666666666667vw;
+}
+
+.message .bubble {
+  background: #f0f4f7;
+  font-size: 0.6770833333333334vw;
+  font-weight: 600;
+  padding: 0.625vw 0.6770833333333334vw;
+  border-radius: 0.2604166666666667vw 0.2604166666666667vw 0.2604166666666667vw 0.2604166666666667vw;
+  color: #8495a3;
+  position: relative;
+  float: left;
+}
+
+#chat-messages div.message.right .bubble {
+  float: right;
+  border-radius: 0.2604166666666667vw 0.2604166666666667vw 0px 0.2604166666666667vw;
+}
+
+.bubble .corner {
+  background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/245657/bubble-corner.png") 0 0 no-repeat;
+  position: absolute;
+  width: 0.3645833333333333vw;
+  height: 0.3645833333333333vw;
+  left: -0.2604166666666667vw;
+  bottom: 0;
+}
+
+div.message.right .corner {
+  background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/245657/bubble-cornerR.png") 0 0 no-repeat;
+  left: auto;
+  right: -0.2604166666666667vw;
+}
+
+.bubble span {
+  color: #aab8c2;
+  font-size: 0.5729166666666666vw;
+  position: absolute;
+  right: 0;
+  bottom: -1.1458333333333333vw;
+}
+
+#sendmessage {
+  height: 6.4034151547492vh;
+  border-top: 0.052083333333333336vw solid #e7ebee;
+  position: absolute;
+  bottom: 0;
+  right: 0px;
+  width: 15.104166666666666vw;
+  background: #fff;
+  padding-bottom: 2.6041666666666665vw;
+}
+
+#sendmessage input {
+  background: #fff;
+  margin: 1.09375vw 0 0 1.09375vw;
+  border: none;
+  padding: 0;
+  font-size: 0.7291666666666666vw;
+  font-family: "Open Sans", sans-serif;
+  font-weight: 400px;
+  color: #aab8c2;
+}
+
+#sendmessage input:focus {
+  outline: 0;
+}
+
+#sendmessage button {
+  background: #fff url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/245657/send.png") 0 -41px no-repeat;
+  width: 1.5625vw;
+  height: 3.2017075773746vh;
+  position: absolute;
+  right: 0.78125vw;
+  top: 1.1979166666666667vw;
+  border: none;
+}
+
+#sendmessage button:hover {
+  cursor: pointer;
+  background-position: 0 0;
+}
+
+#sendmessage button:focus {
+  outline: 0;
+}
+
+#close {
+  position: absolute;
+  top: 0.4166666666666667vw;
+  opacity: 0.8;
+  right: 0.5208333333333334vw;
+  width: 1.0416666666666667vw;
+  height: 2.134471718249733vh;
+  cursor: pointer;
+}
+
+#close:hover {
+  opacity: 1;
+}
+
+.cx, .cy {
+  background: #fff;
+  position: absolute;
+  width: 0px;
+  top: 15px;
+  right: 15px;
+  height: 3px;
+  -webkit-transition: all 250ms ease-in-out;
+  transition: all 250ms ease-in-out;
+}
+
+.cx.s1, .cy.s1 {
+  right: 0;
+  width: 1.0416666666666667vw;
+  -webkit-transition: all 100ms ease-out;
+  transition: all 100ms ease-out;
+}
+
+.cy.s2 {
+  -webkit-transform: rotate(50deg);
+  transform: rotate(50deg);
+  -webkit-transition: all 100ms ease-out;
+  transition: all 100ms ease-out;
+}
+
+.cy.s3 {
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg);
+  -webkit-transition: all 100ms ease-out;
+  transition: all 100ms ease-out;
+}
+
+.cx.s1 {
+  right: 0;
+  width: 1.0416666666666667vw;
+  -webkit-transition: all 100ms ease-out;
+  transition: all 100ms ease-out;
+}
+
+.cx.s2 {
+  -webkit-transform: rotate(140deg);
+  transform: rotate(140deg);
+  -webkit-transition: all 100ms ease-out;
+  transition: all 100ms ease-out;
+}
+
+.cx.s3 {
+  -webkit-transform: rotate(135deg);
+  transform: rotate(135deg);
+  -webkit-transition: all 100ease-out;
+  -webkit-transition: all 100ms ease-out;
+  transition: all 100ms ease-out;
+}
+
+#chatview, #sendmessage {
+  overflow: hidden;
+  border-radius: 6px;
+}
+/*# sourceMappingURL=style.css.map */

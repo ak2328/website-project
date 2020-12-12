@@ -1,0 +1,204 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="{% static 'new/page2/style.css' %}">
+     <link rel="stylesheet" href="{% static 'new/page2/navbar.css' %}">
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/reconnecting-websocket/1.0.0/reconnecting-websocket.min.js"></script>
+    <script src="https://kit.fontawesome.com/73b6dfc8d5.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css"/>
+    <link rel="stylesheet" href="{% static 'main_website/chat_box.css' %}" />
+    <script src="{% static 'main_website/dataanalytics_websocket.js' %}"></script> 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script> 
+    var vid = document.getElementById("myVideo"); 
+
+    function myFunction() {
+      var x = document.getElementById("myDIV");
+      if (x.style.display === "none") {
+        x.style.display = "block";
+        vid.play();
+    
+    vid.onended = function(e){
+      window.location.replace("{% url 'main_website:auditorium' company_name=company_name stall_text=stall_text %}")
+    }
+  }// else {
+    //x.style.display = "none";
+  //}
+}
+
+</script> 
+
+    <script src="https://code.jquery.com/jquery-migrate-3.0.0.min.js"></script>  
+    <title>{{ company_name }}</title>
+        <style>
+       @media (orientation:portrait){
+	        #wrapper { display:none; }
+	        #warning-message { display:block; }
+	    }
+	    @media (orientation: landscape) {
+	        #warning-message { display:none; }
+	    }
+.video-container {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+.video-container video {
+  /* Make video to at least 100% wide and tall */
+  min-width: 100%;
+  min-height: 100%;
+
+  /* Setting width & height to auto prevents the browser from stretching or squishing the video */
+  width: auto;
+  height: auto;
+
+  /* Center the video */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+}
+.btn2{
+    left: 22.2%;
+    }
+
+    </style>
+        <audio id="myAudio">
+          <source src="https://webinarzappastatic.s3.ap-south-1.amazonaws.com/media/WhatsApp+Audio+2020-09-06+at+3.02.16+PM.mpeg" type="audio/mpeg">
+          Your browser does not support the audio element.
+        </audio>
+
+</head>
+<body>
+<div class="video-container video-container-right" style="z-index:-20;">
+<!--<video src="https://webinarzappastatic.s3.ap-south-1.amazonaws.com/media/Right+Teleportation.mp4" width="250" height="50" poster="your_image" id="right_video" ></video>-->
+  <video muted id="right_video">
+    <source src="https://webinarzappastatic.s3.ap-south-1.amazonaws.com/media/Right+Teleportation.mp4" type="video/mp4" />
+  </video>
+</div>
+
+<div class="video-container video-container-left"  style="z-index:-20;">
+<!--<video src="https://webinarzappastatic.s3.ap-south-1.amazonaws.com/media/Right+Teleportation.mp4" width="250" height="50" poster="your_image" id="right_video" ></video>-->
+  <video muted id="left_video">
+    <source src="https://webinarzappastatic.s3.ap-south-1.amazonaws.com/media/Left+Teleportation.mp4" type="video/mp4" />
+  </video>
+</div>
+
+
+<div id='wrapper'>
+    <iframe class="vdo" src="{{ lobby_video_link }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>    
+    <div class="page">
+      <!-- added virtual video -->
+      <div class="myDIV">
+         <video src="https://audivideo.s3.ap-south-1.amazonaws.com/LEFT+VIDEO.mp4"  width="100%" height="100%" id="myVideo" style="display: none;"></video>
+      </div>
+
+    {% if lobby_background_type == 'video' %}
+        <video autoplay="" class="bg" data-setup="{}" height="100%" loop="" muted="" preload="auto"
+               src="{{ lobby_background_url.url }}" style="z-index: 0; position: absolute;" width="100%"></video>
+    {% else %}
+        <img src="{{ lobby_background_url.url }}" class="bg" alt="">
+    {% endif %}
+
+        {% if hall_titles.1 %}
+        <button class="default-btn btn1"><a href="{% url 'main_website:info_desk' company_name=company_name stall_text=stall_text %}" style="text-decoration: none;"><p class="animate__slideInUp wow"data-wow-duration="2s">{{ hall_titles.1 }}</p></a></button>
+        {% endif %}
+        {% if hall_titles.0 %}
+        <button class="default-btn btn2" id="btn2"><p class="animate__slideInUp wow"data-wow-duration="2s">{{ hall_titles.0 }}</p></button>
+        {% endif %}
+
+
+<!--         <button class=""><a  href="{% url 'main_website:photobooth' %}" style="text-decoration: none;"><p class="animate__slideInUp wow"data-wow-duration="2s">photobooth</p></a></button> -->
+         
+        {% if hall_titles.2 %}
+            <button class="default-btn btn3"><a href="{% url 'main_website:exhibit_hall' company_name=company_name stall_text=stall_text %}" style="text-decoration: none;"><p class="animate__slideInUp wow"data-wow-duration="2s">{{ hall_titles.2 }}</p></a></button>
+        {% endif %}
+        {% if hall_titles.3 %}
+            <button class="default-btn btn4" id="btn4"><p class="animate__slideInUp wow"data-wow-duration="2s">{{ hall_titles.3 }}</p></button>
+        {% endif %}
+
+
+    </div>
+    <div class="wrapper1">
+        <div class="boxarea">
+	   {% for image in lobby_banner_images_left %}
+            <div class="slide{{ forloop.counter }} slide">
+    	       <img src="{{ image.url }}" alt="">
+            </div>
+	   {% endfor %}
+         </div>
+    </div>
+    <div class="wrapper2">
+        <div class="boxarea">
+           {% for image in lobby_banner_images_right %}
+                <div class="slide{{ forloop.counter }} slide">
+                   <img src="{{ image.url }}" alt="">
+                </div>
+           {% endfor %}
+        </div>
+    </div>
+    {% include 'new/everypage_chat.html' %}
+
+ {% include 'nav.html' %}
+</div>
+<div id='warning-message' style='background-color: black;'>
+    <img src="https://www.robscanlon.com/pleaserotate/demo.gif" style='width:100%;height: 100%;'></img>
+    <h1 style="font-size: 40px; color:white; position: absolute; top:0%; text-align: center;">Please rotate Mobile </h1>
+</div>
+<script>
+    window.addEventListener('click', function(e){   
+      if (document.getElementById('chatbox').contains(e.target)){
+        // Clicked in box
+      }
+      else if(document.getElementById('attendee_popup').contains(e.target)){
+        document.getElementById('chatbox').style.display = "block";
+        $('#attendee_popup').css('color','black');
+      }
+      else{
+        document.getElementById('chatbox').style.display = "none";
+      }
+    });
+
+    $('#attendee_popup').click(function(){
+        document.getElementById('chatbox').style.display = "block";        
+        $('#attendee_popup').css('color','black');
+    })
+
+    $('#btn4').click(function(){
+        $('.video-container-right').css('z-index',0);
+        $('#right_video').get(0).play();
+        $('#right_video').css('z-index',3000);
+        $('#wrapper').css('display','none');
+
+    })
+
+    $('#btn2').click(function(){
+        $('.video-container-left').css('z-index',0);
+        $('#left_video').get(0).play();
+        $('#wrapper').css('display','none');
+        $('#left_video').css('z-index',3000);
+    })
+
+    document.getElementById('right_video').addEventListener('ended',myHandler,false);
+    function myHandler(e) {
+        window.location.replace("{% url 'main_website:social_lounge' company_name=company_name stall_text=stall_text %}");
+    }
+    document.getElementById('left_video').addEventListener('ended',myHandler,false);
+    function myHandler(e) {
+        window.location.replace("{% url 'main_website:auditorium' company_name=company_name stall_text=stall_text %}");
+    }
+
+</script>
+    <script>
+        new WOW().init();
+        </script>
+
+</body>
+</html>

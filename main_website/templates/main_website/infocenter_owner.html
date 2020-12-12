@@ -1,0 +1,92 @@
+<html>
+{% load static %}
+<head>
+  <style>
+      .people{
+        padding: 5px;
+        background-color: lightgrey;
+        margin: 2px;
+        padding-left: 19px;
+      }
+      .owner{
+        padding: 5px;
+        background-color: red;
+        margin: 2px;    
+        padding-left: 19px;
+      }
+  </style>
+</head>
+<!-- 	<div class='background_image'>
+		<img src="{{ auditorium_background_image.url }}"  preload="auto" width="100%" height="90%" data-setup="{}" loop="" autoplay="" style="z-index: 0; position: absolute;" /> 
+	</div>
+  <div class="video-container lobby_video_container_auditorium">
+		<iframe src="{{ auditorium_youtube_name }}" allowfullscreen autoplay picture-in-picture> </iframe>
+	</div> -->
+
+
+  <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#chatModal" style="position: absolute; z-index: 1; top:0%; left:0%; width:100%; font-size: 30px;">Chat</button>
+  <div class="modal fade" id="chatModal" role="dialog" >
+    <div class="modal-dialog"  style="display:table; max-width: 100%; width: 80%; max-height: 70%; height:50%;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div style='height: 300px; overflow: scroll;' id="chat-messages">
+           
+        </div>       
+        <div class="modal-footer" id="sendmessage">
+          <input type="text" id="chat-message-input" style='width:100%; height: 100%;' />
+          <button type="button" class="btn btn-default" id='send'  >Send</button>
+        </div>      
+      </div>
+      
+    </div>
+  </div>
+    <script>
+        // const roomName = window.href.split('/');
+
+        const chatSocket = new WebSocket(
+            'ws://'
+            + window.location.host
+            + ':9000/ws/infocenter/'+ window.location.href.split('/')[5] + '/'
+        );
+
+        chatSocket.onmessage = function(e) {
+          debugger;
+            const data = JSON.parse(e.data);
+            var message_div = document.createElement('div');
+            message_div.textContent = data['message'];
+            if (data['owner_status'] === 'false') {
+                message_div.className = 'people';
+            } else {
+                message_div.className = 'owner';     
+            }            
+            document.querySelector('#chat-messages').appendChild(message_div);
+        };
+
+        chatSocket.onclose = function(e) {
+            console.error('Chat socket closed unexpectedly');
+        };
+
+        document.querySelector('#chat-message-input').focus();
+        document.querySelector('#chat-message-input').onkeyup = function(e) {
+            if (e.keyCode === 13) {  // enter, return
+                document.querySelector('#chat-message-submit').click();
+            }
+        };
+
+        document.querySelector('#send').onclick = function(e) {
+            const messageInputDom = document.querySelector('#chat-message-input');
+            const message = messageInputDom.value;
+            chatSocket.send(JSON.stringify({
+                'message': message,
+                'owner':true
+            }));
+            messageInputDom.value = '';
+        };
+    </script>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</html>

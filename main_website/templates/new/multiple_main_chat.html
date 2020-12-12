@@ -1,0 +1,53 @@
+
+{% load static %}
+
+<div id="chatbox_main" style='display: none;'>
+    <div id="friendslist_main" style='overflow: scroll;'>
+        <div id="topmenu_main">
+            <span class="friends_main"></span>
+        </div>
+
+        <div id="friends_main">
+            {% for notification,user in owner_chat %}
+                <div class="friend_main" id="user_id_{{  user.id }}" onclick="connect_chat(this.id,'{{ user.name }}',main_active = 1)" >
+                    <p>
+                        <strong>{{ user.name }}</strong>
+                        {% if notification != 0 %}
+                            <span style='float: right; background-color: red; padding: 5px; border-radius: 19px; color:white;'>{{ notification }}</span>
+                        {% else %}
+                            <span style='float: right; background-color: red; padding: 5px; border-radius: 19px; color:white; opacity: 0;'>0</span>
+                        {% endif %}
+                    </p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="p1" id="chatview_main">
+        <div id="profile_main">
+
+            <div id="close_main">
+                <div class="cy"></div>
+                <div class="cx"></div>
+            </div>
+
+            <p>Miro Badev</p>
+            <span>miro@badev@gmail.com</span>
+        </div>
+        <div id="chat-messages-main">
+            <!-- <label>Thursday 02</label> -->
+
+
+        </div>
+
+        <div id="sendmessage_main">
+            <input id="chat-message-input-main" type="text" value="Send message..."/>
+            <button id="send_main"></button>
+        </div>
+    </div>
+</div>
+
+    <script src="{% static 'main_website/chat_box_multiple_main.js' %}"></script>
+<!--     <script src="{% static 'main_website/websocket.js' %}"></script>
+    <script src="{% static 'main_website/websocket_group.js' %}"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js"></script -->

@@ -1,0 +1,556 @@
+from django.shortcuts import render
+from dashboard.models import OrganizerDetails, EventStallUsers, Stalls, StallZoom
+from users.decorators import user_authorized_for_page
+import hashlib
+import hmac
+import base64
+import time
+from django.contrib import messages
+from django.http import JsonResponse
+from users.models import MyUser
+from .models import Notification
+import urllib.parse
+from django.http import JsonResponse
+from .models import Question
+
+
+# Create your views here.
+
+def calculate_registered_users(organizer):
+    # organizer = OrganizerDetails.objects.get(name = company_name)
+    return EventStallUsers.objects.filter(organizer_name=organizer).count()
+
+
+def hall_array(organizer_details):
+    return [organizer_details.hall_title_1, organizer_details.hall_title_2, organizer_details.hall_title_3,
+            organizer_details.hall_title_4]
+
+
+def question(request):
+    question = request.GET.get('question', None)
+    Question.objects.create(question=question, user=MyUser.objects.get(id=request.user.id).name)
+    return JsonResponse({'success': 'success'})
+
+
+@user_authorized_for_page
+def home_page(requests, company_name, stall_text):
+    organizer_details = OrganizerDetails.objects.get(name=company_name)
+    background_type = organizer_details.main_page_background_type
+    background_url = organizer_details.main_page_background_url
+    lobby_page_url = '127.0.0.1:8000/lobby/' + company_name + stall_text
+
+    event_stall_users = EventStallUsers.objects.filter(organizer_name=organizer_details)
+    user_ids = [i.event_user_id for i in event_stall_users]
+
+    users = MyUser.objects.filter(id__in=user_ids).order_by('name')
+
+    resource_links = [[organizer_details.resource_1_name, organizer_details.resource_1_link],
+                      [organizer_details.resource_2_name, organizer_details.resource_2_link],
+                      [organizer_details.resource_3_name, organizer_details.resource_3_link],
+                      [organizer_details.resource_4_name, organizer_details.resource_4_link]]
+
+    slides = [organizer_details.main_page_ppt_image1, organizer_details.main_page_ppt_image2,
+              organizer_details.main_page_ppt_image3, organizer_details.main_page_ppt_image4]
+    print(users)
+    context = {
+        'background_type': background_type,
+        'banner_links': resource_links,
+        'background_url': background_url,
+        'lobby_page_url': lobby_page_url,
+        'company_name': company_name,
+        'stall_text': stall_text,
+        'registered_users': calculate_registered_users(organizer_details),
+        'main_page_front_banner_image': organizer_details.main_page_front_banner_image,
+        'main_page_back_banner_image': organizer_details.main_page_back_banner_image,
+        'slides': slides,
+        'hall_array': hall_array(organizer_details),
+        'users':users
+    }
+
+    # return render(requests, 'main_website/main_page.html', context)
+    return render(requests, 'new/main_page.html', context)
+
+
+@user_authorized_for_page
+def lobby_page(requests, company_name, stall_text):
+    organizer_details = OrganizerDetails.objects.get(name=company_name)
+    hall_titles = [organizer_details.hall_title_1, organizer_details.hall_title_2, organizer_details.hall_title_3,
+                   organizer_details.hall_title_4]
+    resource_links = [[organizer_details.resource_1_name, organizer_details.resource_1_link],
+                      [organizer_details.resource_2_name, organizer_details.resource_2_link],
+                      [organizer_details.resource_3_name, organizer_details.resource_3_link],
+                      [organizer_details.resource_4_name, organizer_details.resource_4_link]]
+    lobby_left_logo = organizer_details.lobby_left_logo
+    lobby_right_logo = organizer_details.lobby_right_logo
+    lobby_video_link = organizer_details.lobby_video_link
+    lobby_background_url = organizer_details.lobby_background_url
+    lobby_banner_link = organizer_details.lobby_banner_link
+    back_button = '/arena/homepage/' + company_name + '/' + stall_text + '/'
+    back_button = urllib.parse.quote(back_button)
+
+    event_stall_users = EventStallUsers.objects.filter(organizer_name=organizer_details)
+    user_ids = [i.event_user_id for i in event_stall_users]
+
+    users = MyUser.objects.filter(id__in=user_ids).order_by('name')
+
+    ### need to remove ####
+    stalls = Stalls.objects.filter(organization=organizer_details)
+    stall_texts = [i.unique_url for i in stalls]
+    lobby_banner_images_left = [organizer_details.lobby_banner_image1, organizer_details.lobby_banner_image2,
+                                organizer_details.lobby_banner_image3, organizer_details.lobby_banner_image4]
+    lobby_banner_images_right = [organizer_details.lobby_banner_image5, organizer_details.lobby_banner_image6,
+                                 organizer_details.lobby_banner_image7, organizer_details.lobby_banner_image8]
+    context = {
+        'hall_titles': hall_titles,
+        'banner_links': resource_links,
+        'lobby_left_logo': lobby_left_logo,
+        'lobby_right_logo': lobby_right_logo,
+        'lobby_video_link': lobby_video_link,
+        'lobby_background_type': organizer_details.lobby_background_type,
+        'lobby_background_url': lobby_background_url,
+        'company_name': company_name,
+        'stall_text': stall_text,
+        'lobby_banner_link': lobby_banner_link,
+        'registered_users': calculate_registered_users(organizer_details),
+        'stall_texts': stall_texts,
+        'back_button': back_button,
+        'hall_array': hall_array(organizer_details),
+        'lobby_banner_images_left': lobby_banner_images_left,
+        'lobby_banner_images_right': lobby_banner_images_right,
+        'users':users
+    }
+
+    # return render(requests, 'main_website/lobby_page.html', context)
+    return render(requests, 'new/lobby_page.html', context)
+
+
+@user_authorized_for_page
+def auditorium(requests, company_name, stall_text):
+    organizer_details = OrganizerDetails.objects.get(name=company_name)
+    auditorium_background_image = organizer_details.auditorium_background_image
+    if organizer_details.auditorium_video_type == 'youtube':
+        
+        auditorium_youtube_name = organizer_details.auditorium_youtube_name
+        auditorium_keynote_track = organizer_details.auditorium_keynote_track
+        back_button = '/arena/lobby/' + company_name + '/' + stall_text + '/'
+        back_button = urllib.parse.quote(back_button)
+
+        context = {
+            'auditorium_background_image': auditorium_background_image,
+            'auditorium_keynote_track': auditorium_keynote_track,
+            'auditorium_youtube_name': auditorium_youtube_name,
+            'company_name': company_name,
+            'stall_text': stall_text,
+            'registered_users': calculate_registered_users(organizer_details),
+            'back_button': back_button,
+            'hall_array': hall_array(organizer_details)
+        }
+
+        # return render(requests, 'main_website/auditorium.html', context)
+        return render(requests, 'new/auditorium.html', context)
+    else:
+        zoom_id = organizer_details.zoom_meeting_id
+        zoom_password = organizer_details.zoom_password
+
+        back_button = '/arena/lobby/' + company_name + '/' + stall_text + '/'
+        back_button = urllib.parse.quote(back_button)
+
+        context = {
+            'auditorium_background_image': auditorium_background_image,        
+            'company_name': company_name,
+            'stall_text': stall_text,
+            'registered_users': calculate_registered_users(organizer_details),
+            'zoom_meeting_id': zoom_id,
+            'zoom_meeting_password': zoom_password,
+            'back_button': back_button,
+            'hall_array': hall_array(organizer_details)
+        }
+        # return render(requests, 'main_website/auditorium_zoom.html', context)
+        return render(requests, 'new/auditorium_zoom.html', context)
+        # return render(requests, 'new/auditorium_zoom.html', context)
+
+
+@user_authorized_for_page
+def info_desk(requests, company_name, stall_text):
+    organizer_details = OrganizerDetails.objects.get(name=company_name)
+    back_button = '/arena/lobby/' + company_name + '/' + stall_text + '/'
+    back_button = urllib.parse.quote(back_button)
+    infocenter_video = organizer_details.infocenter_video
+    infocenter_doc = organizer_details.infocenter_doc
+    infocenter_left = organizer_details.infocenter_left_banner
+    infocenter_right = organizer_details.infocenter_right_banner
+    infocenter_background_image= organizer_details.info_background_image
+
+    context = {
+        'company_name': company_name,
+        'stall_text': stall_text,
+        'organizer_details': organizer_details,
+        'registered_users': calculate_registered_users(organizer_details),
+        'back_button': back_button,
+        'hall_array': hall_array(organizer_details),
+        'infocenter_video': infocenter_video,
+        'infocenter_doc': infocenter_doc,
+        'infocenter_left': infocenter_left,
+        'infocenter_right': infocenter_right,
+	'infocenter_background_image':infocenter_background_image
+    }
+
+    return render(requests, 'new/infocenter.html', context)
+
+
+@user_authorized_for_page
+def exhibit_hall(requests, company_name, stall_text):
+    organizer_details = OrganizerDetails.objects.get(name=company_name)
+    logo_left = organizer_details.hall_logo_left
+    logo_center = organizer_details.hall_logo_center
+    logo_right = organizer_details.hall_logo_right
+    background_image = organizer_details.hall_background_image
+    stalls = Stalls.objects.filter(organization=organizer_details)
+    stall_images = [i.stall_front_image for i in stalls]
+    stall_texts = [i.unique_url for i in stalls]
+    back_button = '/arena/lobby/' + company_name + '/' + stall_text + '/'
+    back_button = urllib.parse.quote(back_button)
+    stall_details = zip(stall_images, stall_texts)
+
+    event_stall_users = EventStallUsers.objects.filter(organizer_name=organizer_details)
+    user_ids = [i.event_user_id for i in event_stall_users]
+
+    users = MyUser.objects.filter(id__in=user_ids).order_by('name')
+
+    context = {
+        'company_name': company_name,
+        'stall_text': stall_text,
+        'logo_left': logo_left,
+        'logo_center': logo_center,
+        'logo_right': logo_right,
+        'background_image': background_image,
+        # 'stall_images': stall_images,
+        'registered_users': calculate_registered_users(organizer_details),
+        'stall_details': stall_details,
+        'back_button': back_button,
+        'hall_array': hall_array(organizer_details),
+        'users':users
+    }
+    return render(requests, 'new/exhibit_hall.html', context)
+    # return render(requests, 'main_website/expohall.html', context)
+
+
+def auditorium_owner(requests, company_name):
+    organizer_details = OrganizerDetails.objects.get(name=company_name)
+    context = {
+    }
+    return render(requests, 'main_website/auditorium_owner.html', context)
+
+
+@user_authorized_for_page
+def resource_center(requests, company_name, stall_text):
+    organizer_details = OrganizerDetails.objects.get(name=company_name)
+    return render(requests, 'main_website/resource_center.html', context)
+
+
+# @user_authorized_for_page
+# def social_lounge(requests,company_name,stall_text):
+# 	organizer_details = OrganizerDetails.objects.get(name = company_name)
+# 	context = {
+# 		'company_name' : company_name,
+# 		'stall_text' : stall_text,	
+# 		'registered_users':calculate_registered_users(organizer_details)
+# 	}
+# 	return render(requests,'main_website/social_lounge.html',context)
+
+
+#@user_authorized_for_page
+def social_lounge(requests, company_name, stall_text):
+    organizer_details = OrganizerDetails.objects.get(name=company_name)
+
+    event_stall_users = EventStallUsers.objects.filter(organizer_name=organizer_details)
+    user_ids = [i.event_user_id for i in event_stall_users]
+
+    users = MyUser.objects.filter(id__in=user_ids).order_by('name')
+    # print(requests.user.id)
+    notifications = Notification.objects.filter(reciever=requests.user)
+    # print(notifications)
+    users_array = []
+    notifications_array = []
+    # print(notifications[0].reciever.id)
+
+    for user in users:
+        if (user.id != requests.user.id):
+            flag = 0
+            for notification in notifications:
+                # print(notification)
+                if notification.author.id == user.id:
+                    # print('*******************************************')
+                    # print(notification.reciever.id)
+                    notifications_array.append(notification.count)
+                    users_array.append(user)
+                    flag = 1
+            if (flag == 0):
+                notifications_array.append(0)
+                users_array.append(user)
+
+        else:
+            print('match')
+
+    for i in range(len(notifications_array)):
+        for j in range(i + 1, len(notifications_array)):
+            if (notifications_array[i] <= notifications_array[j]):
+                temp = notifications_array[i]
+                notifications_array[i] = notifications_array[j]
+                notifications_array[j] = temp
+
+                temp = users_array[i]
+                users_array[i] = users_array[j]
+                users_array[j] = temp
+
+    users = zip(notifications_array, users_array)
+
+    room_name = 'wow'
+    back_button = '/arena/lobby/' + company_name + '/' + stall_text + '/'
+    back_button = urllib.parse.quote(back_button)
+    context = {
+        'company_name': company_name,
+        'stall_text': stall_text,
+        'registered_users': calculate_registered_users(organizer_details),
+        'room_name': room_name,
+        'users': users,
+        'current_user': MyUser.objects.get(id=requests.user.id),
+        'back_button': back_button,
+        'hall_array': hall_array(organizer_details),
+        'background_image': organizer_details.social_lounge_background_image
+    }
+    # return render(requests, 'main_website/social_lounge.html', context)
+    return render(requests, 'new/social_lounge.html', context)
+
+
+def generateSignature(data):
+    ts = int(round(time.time() * 1000)) - 30000;
+    print(data)
+    msg = data['apiKey'] + str(data['meetingNumber']) + str(ts) + str(data['role']);
+    message = base64.b64encode(bytes(msg, 'utf-8'));
+    # message = message.decode("utf-8");
+    secret = bytes(data['apiSecret'], 'utf-8')
+    hash = hmac.new(secret, message, hashlib.sha256);
+    hash = base64.b64encode(hash.digest());
+    hash = hash.decode("utf-8");
+    tmpString = "%s.%s.%s.%s.%s" % (data['apiKey'], str(data['meetingNumber']), str(ts), str(data['role']), hash);
+    signature = base64.b64encode(bytes(tmpString, "utf-8"));
+    signature = signature.decode("utf-8");
+    return signature.rstrip("=");
+
+
+@user_authorized_for_page
+def stall(requests, company_name, stall_text):
+    organizer_details = OrganizerDetails.objects.get(name=company_name)
+    stall_id = Stalls.objects.get(unique_url=stall_text)
+    stall_zoom = StallZoom.objects.get(stall_id=stall_id)
+
+    back_button = '/arena/stall_details/' + company_name + '/' + stall_text + '/'
+    back_button = urllib.parse.quote(back_button)
+
+    context = {
+        'company_name': company_name,
+        'stall_text': stall_text,
+        'registered_users': calculate_registered_users(organizer_details),
+        'zoom_meeting_id': stall_zoom.zoom_meeting_id,
+        'zoom_meeting_password': stall_zoom.zoom_meeting_password,
+        'back_button': back_button,
+        'hall_array': hall_array(organizer_details)
+    }
+    # return render(requests, 'main_website/zoom.html', context)
+    return render(requests, 'new/zoom.html', context)
+
+
+def stall_iframe(requests):
+    return render(requests, 'main_website/meeting.html')
+
+
+def zoom_start(requests):
+    data = {'apiKey': "nrMRNKkOTLCOJWBeQIPKZw",
+            'apiSecret': "uapXKfPU5xLQqocbJjm3vfzQAsJ3gWdO6MmC",
+            'meetingNumber': requests.GET.get('meetingNumber', None),
+            'role': 0
+            }
+    return JsonResponse({'signature': generateSignature(data)})
+
+
+def stall_portal(requests, company_name, stall_text):
+    stall = Stalls.objects.get(unique_url=stall_text)
+    context = {}
+    zoom = None
+    if requests.POST:
+        try:
+            zoom = StallZoom.objects.get(stall_id=stall)
+            zoom.zoom_meeting_id = requests.POST['zoom_meeting_id']
+            zoom.zoom_meeting_password = requests.POST['zoom_meeting_password']
+            zoom.save()
+            messages.success(requests, "Successfully Submitted")
+        except:
+            zoom = StallZoom()
+            zoom.stall_id = stall
+            zoom.zoom_meeting_id = requests.POST['zoom_meeting_id']
+            zoom.zoom_meeting_password = requests.POST['zoom_meeting_password']
+            zoom.save()
+            messages.success(requests, "Successfully Submitted")
+    else:
+        try:
+            zoom = StallZoom.objects.get(stall_id=stall)
+        except:
+            context = {}
+    try:
+        context['zoom_meeting_id'] = zoom.zoom_meeting_id
+        context['zoom_meeting_password'] = zoom.zoom_meeting_password
+    except:
+        pass
+
+    return render(requests, 'main_website/stall_member.html', context)
+
+
+# def download_stall(requests,company_name,stall_texts):
+
+
+def stall_details(requests, company_name, stall_text):
+    organizer_details = OrganizerDetails.objects.get(name=company_name)
+
+    stall = Stalls.objects.get(unique_url=stall_text)
+    stall_web_link = stall.stall_web_link
+    stall_video_url = stall.stall_video_url
+    stall_doc_url = stall.stall_doc_url
+    stall_whatsapp_number = stall.stall_whatsapp_number
+    stall_image_background = stall.stall_image_link
+    back_button = '/arena/exhibit_hall/' + company_name + '/' + stall_text + '/'
+    back_button = urllib.parse.quote(back_button)
+    rotating_images = None
+    if stall.stall_first_rotating_image:
+        rotating_images = [stall.stall_first_rotating_image, stall.stall_second_rotating_image,
+                           stall.stall_third_rotating_image, stall.stall_fourth_rotating_image, ]
+    else:
+        rotating_images = None
+
+    zoom_id = None
+    zoom_password = None
+
+    try:
+        stall_zoom = StallZoom.objects.get(stall_id=stall_id)
+        zoom_id = stall_zoom.zoom_meeting_id
+        zoom_password = stall_zoom.zoom_meeting_password
+    except:
+        pass
+
+    context = {
+        'company_name': company_name,
+        'stall_text': stall_text,
+        'stall_web_link': stall_web_link,
+        'stall_video_url': stall_video_url,
+        'stall_doc_url': stall_doc_url,
+        'background': stall_image_background,
+        'registered_users': calculate_registered_users(organizer_details),
+        'back_button': back_button,
+        'hall_array': hall_array(organizer_details),
+        'rotating_images': rotating_images,
+        'stall_whatsapp_number': stall_whatsapp_number,
+        'zoom_meeting_id': zoom_id,
+        'zoom_meeting_password': zoom_password,        
+    }
+
+    return render(requests, 'new/stall_details_page.html', context)
+
+def userwise_notification(users, notifications):
+    users_array = []
+    notifications_array = []
+    # print(notifications[0].reciever.id)
+
+    for user in users:
+        flag = 0
+        for notification in notifications:
+            # print(notification)
+            if notification.author.id == user.id:
+                print('*******************************************')
+                # print(notification.reciever.id)
+                notifications_array.append(notification.count)
+                users_array.append(user)
+                flag = 1
+        if (flag == 0):
+            notifications_array.append(0)
+            users_array.append(user)
+
+    for i in range(len(notifications_array)):
+        for j in range(i + 1, len(notifications_array)):
+            if (notifications_array[i] <= notifications_array[j]):
+                temp = notifications_array[i]
+                notifications_array[i] = notifications_array[j]
+                notifications_array[j] = temp
+
+                temp = users_array[i]
+                users_array[i] = users_array[j]
+                users_array[j] = temp
+
+    users = zip(notifications_array, users_array)
+    return users
+
+
+def stall_user_chat(requests, company_name, stall_text):
+    organizer_details = OrganizerDetails.objects.get(name=company_name)
+    stall = Stalls.objects.get(unique_url=stall_text)
+
+    users = MyUser.objects.filter(username=stall_text)
+
+    notifications = Notification.objects.filter(reciever=requests.user)
+    users = userwise_notification(users, notifications)
+
+    room_name = 'wow'
+    context = {
+        'company_name': company_name,
+        'stall_text': stall_text,
+        'registered_users': calculate_registered_users(organizer_details),
+        'room_name': room_name,
+        'users': users,
+        'current_user': MyUser.objects.get(id=requests.user.id),
+        # 'notifications':Notifications
+    }
+
+    return render(requests, 'main_website/stall_chat.html', context)
+
+
+def stall_owner_chat(requests, company_name, stall_text):
+    organizer_details = OrganizerDetails.objects.get(name=company_name)
+
+    stall = Stalls.objects.get(unique_url=stall_text)
+
+    stall_owner = MyUser.objects.filter(username=stall_text)
+
+    stall_user = Message.objects.filter(reciever=stall_user).distinct('author')
+
+    users = [MyUser.objects.get(id=i.author.id) for i in stall_user]
+
+    notifications = Notification.objects.filter(reciever=requests.user)
+    users = userwise_notification(stall_user, notifications)
+
+    room_name = 'wow'
+
+    context = {
+        'company_name': company_name,
+        'stall_text': stall_text,
+        'registered_users': calculate_registered_users(organizer_details),
+        'room_name': room_name,
+        'users': users,
+        'current_user': MyUser.objects.get(id=requests.user.id),
+        # 'notifications':Notifications
+    }
+
+    return render(requests, 'main_website/stall_chat.html', context)
+
+
+def stall_owner_page(request, company_name, stall_text):
+    stall_user_id = MyUser.objects.get(id=request.user.id).mobile
+
+    context = {
+        'company_name': company_name,
+        'stall_text': stall_text,
+        'registered_users': calculate_registered_users(organizer_details),
+        'room_name': room_name,
+        'users': users,
+        'current_user': MyUser.objects.get(id=request.user.id),
+        # 'notifications':Notifications
+    }
+    return render(request, 'main_website/stall_owner.html', context)

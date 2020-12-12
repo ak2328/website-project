@@ -1,0 +1,127 @@
+﻿{% load static %}
+<!DOCTYPE html>
+<html >
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Webinar Wall</title>
+    <link href="{% static 'dist/css/style.min.css' %}" rel="stylesheet">
+    <style>
+        .auth-box {
+            margin-left: auto !important;
+            margin-right: auto !important;
+
+        }
+        .auth-wrapper .auth-box {
+             background: #fff; 
+             padding: none; 
+             box-shadow: none; 
+             max-width: 100%; 
+             width: 100%; 
+             margin: 0% !important; 
+        }        
+        .success{
+            text-align: center;
+            background-color: lightgreen;
+            color: black;
+            padding-bottom: 5px;
+            border-color: green;
+            padding-top: 5px;
+            border-style: solid;
+            margin-top: 5px;
+        }
+        .error{
+            text-align: center;
+            background-color: red;
+            color: black;
+            padding-bottom: 5px;
+            border-color: darkred;
+            padding-top: 5px;
+            border-style: solid;
+            margin-top: 5px;
+        }
+        .intro-text{
+            color:black;
+            font-weight: bold;
+            font-family: sans-serif;
+            text-align: center;
+        }
+        .row_heading{
+            display: block;
+            width: 100%;
+        }
+        .main_box{
+            border: black;
+            border-style: double;
+            border-width: 5px;
+        }
+        h4{
+            font-style: sans-serif;
+            font-weight: bold;
+            color: black;
+            text-align: center;
+        }
+        input{
+            border-color: black !important;
+        }
+        label{
+            font-weight: bold;
+            color: black;
+        }
+
+        .login_main_boxes{
+            margin-top: auto;
+            margin-bottom: auto;
+        }
+        button{
+            background-color: black !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main-wrapper">
+        <!-- ============================================================== -->
+        <!-- Preloader - style you can find in spinners.css -->
+        <!-- ============================================================== -->
+<!--         <div class="preloader">
+            <div class="lds-ripple">
+                <div class="lds-pos"></div>
+                <div class="lds-pos"></div>
+            </div>
+        </div> -->
+        <!-- ============================================================== -->
+        <!-- Preloader - style you can find in spinners.css -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Login box.scss -->
+        <!-- ============================================================== -->
+<!--         <div class="auth-wrapper d-flex no-block justify-content-center align-items-center" style="background:url({% static 'assets/images/big/auth-bg.jpg' %}) no-repeat center center;"> -->
+        <div class='row'>
+            <div class="col-md-6 col-lg-6 col-sm-12 login_main_boxes">
+                <img src="{{ login_image.url }}" alt="logo" height="100%" width="100%"/>
+            </div>
+            <div class="col-md-6 col-lg-6 col-sm-12 login_main_boxes">
+                <div class="col-12 main_box">
+                    <div class = 'row' style='margin-top: 11px;'>
+                        <div class = 'row_heading'>
+                            <h4 class='intro-text'>Register For This Event</br></h4>
+                        </div>
+                        <div class='row_heading'>
+                            <h4>
+                                Fill the Details Below to Enter Virtual World </br>
+                            </h4>
+                        </div>
+                    </div>
+                    {% block content %}
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
